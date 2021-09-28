@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import supabase from "./supabase";
 import ViewJobs from "./ViewJobs";
 import Signup from "./Signup";
-
+import '../styles/App.css'
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -67,7 +67,7 @@ export default class App extends Component {
               <h2>Sign In here</h2>
               <h2>
                 Or if you dont have an account click{" "}
-                <a href='#' onClick={() => this.setState({signup: true})}>here</a> to sign up
+                <button onClick={() => this.setState({signup: true})}>here</button> to sign up
               </h2>
               <form onSubmit={(event) => this.onSubmit(event)}>
                 <label htmlFor="email">Email</label>

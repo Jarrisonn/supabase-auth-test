@@ -36,6 +36,10 @@ class Signup extends Component {
           if(error){
               alert(error.message)
           }
+          if(user){
+              
+              alert(`User: ${this.state.email} has been created!`)
+          }
           console.log(error);
 
         
@@ -56,9 +60,9 @@ class Signup extends Component {
                 <div>
                     <h1>Signup here</h1>
                     <form onSubmit={event => this.onSubmit(event)}>
-                        <label htmlfor='email'>Email</label>
+                        <label htmlFor='email'>Email</label>
                         <input name='email' value={this.state.email} onChange={event => this.onChange(event)}></input>
-                        <label htmlfor='password'>Password</label>
+                        <label htmlFor='password'>Password</label>
                         <input name='password' type='password' value={this.state.password} onChange={event => this.onChange(event)}></input>
                         <button>Submit</button>
                     </form>

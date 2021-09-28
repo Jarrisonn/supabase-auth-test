@@ -18,6 +18,7 @@ export default class App extends Component {
 
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.passSession = this.passSession.bind(this);
   }
 
   async onSubmit(event) {
@@ -57,6 +58,16 @@ export default class App extends Component {
     });
   }
 
+  passSession(session){
+    console.log(session);
+    this.setState({
+      session: session,
+      signup: false,
+      signedIn: true,
+    },() => {
+      console.log(this.state.session);
+    })
+  }
   render() {
     return (
       
@@ -107,7 +118,7 @@ export default class App extends Component {
           )}
           {this.state.signup &&
           <div>
-              <Signup/>
+              <Signup passSession={this.passSession}/>
               <button onClick={() => this.setState({signup: false})}>Click here to sign in</button>
           </div>
           }

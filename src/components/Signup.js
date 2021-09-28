@@ -14,6 +14,7 @@ class Signup extends Component {
 
         this.onSubmit = this.onSubmit.bind(this)
         this.onChange = this.onChange.bind(this)
+        this.createUser = this.createUser.bind(this)
     }
     
   
@@ -32,13 +33,17 @@ class Signup extends Component {
           },{redirectTo: 'localhost:3000'})
 
 
-          console.log(session);
+
+          
           if(error){
               alert(error.message)
           }
           if(user){
-              
+              this.createUser(user)
               alert(`User: ${this.state.email} has been created!`)
+          }
+          if(session){
+              this.props.passSession(session);
           }
           console.log(error);
 
@@ -53,7 +58,16 @@ class Signup extends Component {
             [event.target.name]: event.target.value,
         })
     }
+    async createUser(user){
 
+        const { data, error } = await supabase
+        .from('user')
+        .insert([
+        { id: user.id, email: user.email, },
+        ])
+
+    }
+ 
     render() {
         return (
            

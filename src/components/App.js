@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import supabase from "./supabase";
 import ViewJobs from "./ViewJobs";
 import Signup from "./Signup";
+import Profile from "./Profile";
 import '../styles/App.css'
 export default class App extends Component {
   constructor(props) {
@@ -14,11 +15,14 @@ export default class App extends Component {
       signup: false,
       session: null,
       error: null,
+      profile:false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.passSession = this.passSession.bind(this);
+    this.showProfile = this.showProfile.bind(this)
+    this.closeProfile = this.closeProfile.bind(this);
   }
 
   async onSubmit(event) {
@@ -68,6 +72,16 @@ export default class App extends Component {
       console.log(this.state.session);
     })
   }
+  showProfile(){
+    this.setState({
+      profile: true
+    })
+  }
+  closeProfile(){
+    this.setState({
+      profile: false
+    })
+  }
   render() {
     return (
       
@@ -101,7 +115,7 @@ export default class App extends Component {
           {this.state.session && (
             <div>
               <h2>Signed in as {this.state.session.user.email}</h2>
-              <button onClick={() => this.setState({ session: null })}>
+              <button onClick={() => this.setState({ session: null,signedIn: false, profile: false, })}>
                 Sign Out
               </button>
             </div>
@@ -111,9 +125,10 @@ export default class App extends Component {
               <h2>{this.state.error}</h2>
             </div>
           )}
-          {this.state.session && (
+          {this.state.session && !this.state.profile && (
             <div>
               <ViewJobs session={this.state.session} />
+              <button onClick={this.showProfile}>Show Profile</button>
             </div>
           )}
           {this.state.signup &&
@@ -122,6 +137,10 @@ export default class App extends Component {
               <button onClick={() => this.setState({signup: false})}>Click here to sign in</button>
           </div>
           }
+          {this.state.profile && this.state.session &&
+          <div>
+            <Profile closeProfile={this.closeProfile}/>
+          </div>}
         </div>
        
     );

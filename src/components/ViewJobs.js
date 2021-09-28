@@ -124,15 +124,17 @@ class App extends Component {
               <p>Reg Number: {car.car_reg}</p>
               <p>{car.DeliveryMethod}</p>
               <p>Time requested: {car.time_requested}</p>
-              <p>Job Descripton: {car.Description}</p>
-              {!car.painterid &&
-                <div>
-                  <p>Job not taken yet</p>
-                  {this.state.sprayaway &&
-
-                    <button>Take Job</button>
-                  }
-                </div>}
+              <p>Job Descripton: {car.description}</p>
+              {!car.delivery && !this.state.sprayaway &&
+              <div>
+                You have requested the car to be collected
+              </div>
+              }
+              {car.delivery && !this.state.sprayaway && 
+              <div>
+                You have requested that you deliver the car to the unit
+              </div>
+              }
               {this.state.sprayaway &&
                 <div>
                   <button>SPRAYAWAY ONLY BUTTON</button>

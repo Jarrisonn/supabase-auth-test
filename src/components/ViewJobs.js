@@ -19,6 +19,7 @@ class App extends Component {
     this.addJob = this.addJob.bind(this)
     this.getJob = this.getJob.bind(this)
     this.deleteJob = this.deleteJob.bind(this)
+    this.getImages = this.getImages.bind(this)
   }
 
   async componentDidMount() {
@@ -45,6 +46,10 @@ class App extends Component {
       }
     })
 
+    let carData = [...data]
+    console.log(carData);
+
+    
 
     const Job = supabase
       .from('job')
@@ -76,6 +81,14 @@ class App extends Component {
         }
       })
       .subscribe()
+
+    // Use the JS library to create a bucket.
+
+    
+
+    
+
+    this.getImages();
   }
 
   addJob(event) {
@@ -106,6 +119,29 @@ class App extends Component {
     
 
   }
+
+  async getImages(){
+    //c1640c5d-7b58-43dd-94a3-90e31b63062d
+    const { publicURL, error } = supabase
+    .storage
+    .from('c1640c5d-7b58-43dd-94a3-90e31b63062d')
+    .getPublicUrl('2')
+   
+    //https://tupufqoprwlcjhwoaqzd.supabase.in/storage/v1/object/public/c1640c5d-7b58-43dd-94a3-90e31b63062d/2/koke-mayayo-thevisualkiller-uG8RGApPGWk-unsplash.jpg
+    console.log(publicURL);
+
+    
+
+    const { listdata, eorrerror } = await supabase
+    .storage
+    .from('c1640c5d-7b58-43dd-94a3-90e31b63062d')
+    .list('2/')
+    console.log(listdata);
+    
+    
+  }
+
+
   render() {
     return (
 
@@ -115,8 +151,8 @@ class App extends Component {
             Loading...
           </div>}
         {!this.state.hidden && <div>
-          <button onClick={event => this.addJob(event)}>Add Job</button>
           <h2>Your Jobs: </h2>
+          <button onClick={event => this.addJob(event)}>Add Job</button>
           {!this.state.hidden && !this.state.loading && this.state.data.map((car, index) => (
             <div className='job' key={index}>
               <p>Make: {car.car_make}</p>
@@ -138,15 +174,16 @@ class App extends Component {
               {this.state.sprayaway &&
                 <div>
                   <button>SPRAYAWAY ONLY BUTTON</button>
-                </div>}
-                <button onClick={event => this.deleteJob(event,index)}>X</button>
+                </div>
+              }
+                <button onClick={event => this.deleteJob(event,index)}>Delete Job</button>
             </div>
           ))}
         </div>}
         {this.state.createJob && 
         <CreateJob getJob={this.getJob} session={this.state.session}/>
         }
-        <button onClick={() => this.setState({ hidden: !this.state.hidden, createJob: !this.state.createJob })}>Hide Jobs</button>
+        
       </div>
 
     );

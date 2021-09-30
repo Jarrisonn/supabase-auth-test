@@ -129,7 +129,7 @@ export default class App extends Component {
           {this.state.session && !this.state.profile && (
             <div>
               <ViewJobs session={this.state.session} />
-              <Image session={this.state.session}/>
+              
               <button onClick={this.showProfile}>Show Profile</button>
             </div>
           )}

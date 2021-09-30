@@ -25,15 +25,15 @@ class Image extends Component {
           console.log(data);
       
 
-    let array = []
+    let urlArray = []
     for (let index = 1; index < data.length; index++) {
         const { publicURL, urlerror } = supabase.storage
           .from("c1640c5d-7b58-43dd-94a3-90e31b63062d")
           .getPublicUrl(`2/${data[index].name}`);
-        array.push(publicURL)   
+        urlArray.push(publicURL)   
     }
 
-    console.log(array);
+    console.log(urlArray);
 
 
   }
@@ -51,12 +51,12 @@ class Image extends Component {
       () => {
         console.log(this.state.imageList);
       }
-    );
+    ); 
 
     //upload files to supabase storage
     const { uploaddata, error } = await supabase.storage
       .from("c1640c5d-7b58-43dd-94a3-90e31b63062d")
-      .upload(`2/${file.name}`, file, {
+      .upload(`3/${file.name}`, file, {
         cacheControl: "3600",
         upsert: false,
       });

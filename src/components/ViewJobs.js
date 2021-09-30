@@ -126,9 +126,9 @@ class App extends Component {
     .storage
     .from('c1640c5d-7b58-43dd-94a3-90e31b63062d')
     .getPublicUrl('2')
+    console.log(publicURL);
    
     //https://tupufqoprwlcjhwoaqzd.supabase.in/storage/v1/object/public/c1640c5d-7b58-43dd-94a3-90e31b63062d/2/koke-mayayo-thevisualkiller-uG8RGApPGWk-unsplash.jpg
-    console.log(publicURL);
 
     
 
@@ -171,6 +171,9 @@ class App extends Component {
                 You have requested that you deliver the car to the unit
               </div>
               }
+              <div>
+                <button>Add images</button>
+              </div>
               {this.state.sprayaway &&
                 <div>
                   <button>SPRAYAWAY ONLY BUTTON</button>

@@ -4,6 +4,7 @@ import ViewJobs from "./ViewJobs";
 import Signup from "./Signup";
 import Profile from "./Profile";
 import '../styles/App.css'
+import Image from "./Image";
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -128,6 +129,7 @@ export default class App extends Component {
           {this.state.session && !this.state.profile && (
             <div>
               <ViewJobs session={this.state.session} />
+              <Image session={this.state.session}/>
               <button onClick={this.showProfile}>Show Profile</button>
             </div>
           )}
@@ -141,6 +143,7 @@ export default class App extends Component {
           <div>
             <Profile closeProfile={this.closeProfile}/>
           </div>}
+          
         </div>
        
     );

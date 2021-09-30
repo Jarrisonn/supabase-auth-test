@@ -135,7 +135,7 @@ class App extends Component {
     const { listdata, eorrerror } = await supabase
     .storage
     .from('c1640c5d-7b58-43dd-94a3-90e31b63062d')
-    .list('2/')
+    .list('/public/2/c1640c5d-7b58-43dd-94a3-90e31b63062d')
     console.log(listdata);
     
     

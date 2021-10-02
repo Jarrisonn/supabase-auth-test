@@ -41,14 +41,10 @@ class CreateJob extends Component {
 
     async onImgChange(event){
 
-        console.log(this.state.jobid);
+        
         let file = event.target.files[0];
-        console.log(event);
-        this.setState({
-            images: [...this.state.images, file],
-        }, () => {
-            console.log(this.state.images);
-        })
+       
+      
         //insert images into storage
         const { uploaddata, error } = await supabase.storage
             .from(this.state.session.user.id)
@@ -104,11 +100,19 @@ class CreateJob extends Component {
         const { imgdata, imgerror } = await supabase
         .from('images')
         .insert([
-        {imageid: uuidv4(), jobid: this.state.jobid, imageurl: url },
+        {userid: this.state.session.user.id, imageid: uuidv4(), jobid: this.state.jobid, imageurl: url },
         ])
         if(imgerror) {
             console.log(imgerror.message);
         }
+
+        this.setState({
+            images: [...this.state.images, url],
+        }, () => {
+            console.log(this.state.images);
+        })
+
+
 
     }
     
@@ -137,6 +141,12 @@ class CreateJob extends Component {
                         type="file"
                         capture="environment"
                     />
+                    {this.state.images.map((image, index) => (
+                        <div className='addImageList' key={index}>
+                            <img height='50' width='50' src={image}/>
+                        </div>
+                        
+                    ))}
                     <button onClick={this.closeAddJob}>X</button>
                     <button>Add Job</button>
                 </form>

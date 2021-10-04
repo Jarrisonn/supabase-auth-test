@@ -17,9 +17,9 @@ class App extends Component {
     this.addJob = this.addJob.bind(this);
     this.getJob = this.getJob.bind(this);
     this.deleteJob = this.deleteJob.bind(this);
-    this.getImages = this.getImages.bind(this);
     this.getCar = this.getCar.bind(this)
     this.sendToJobs = this.sendToJobs.bind(this)
+    this.updateJobs = this.updateJobs.bind(this);
   }
 
   async componentDidMount() {
@@ -66,20 +66,18 @@ class App extends Component {
         }
 
         if (payload.eventType === "DELETE") {
-          console.log("DELETE operation");
-          let newdata = [...this.state.data];
-          newdata.forEach((car, index) => {
-            if (car.id === payload.old.id) {
-              console.log(`car found at: ${index}`);
-              let removed = newdata.splice(index, 1);
-              console.log(removed);
-            }
-            console.log(newdata);
-          });
-
-          this.setState({
-            data: newdata,
-          });
+          // console.log("DELETE operation");
+          // let newdata = [...this.state.data];
+          // newdata.forEach((car, index) => {
+          //   if (car.id === payload.old.id) {
+          //     console.log(`car found at: ${index}`);
+          //     let removed = newdata.splice(index, 1);
+          //     console.log(`ViewJobs line: 74 ${removed}`);
+          //   }
+          //   console.log(newdata);
+          // });
+          this.updateJobs();
+  
         }
       })
       .subscribe();
@@ -87,6 +85,12 @@ class App extends Component {
     // Use the JS library to create a bucket.
 
     
+  }
+  async updateJobs(){
+    let { data, error } = await supabase.from("job").select("*");
+    this.setState({
+      data: data
+    })
   }
 
   addJob(event) {
@@ -108,79 +112,13 @@ class App extends Component {
   async deleteJob(event, index) {
     event.preventDefault();
 
+    console.log(index);
     const { data, error } = await supabase
       .from("job")
       .delete()
       .eq("jobid", String(this.state.data[index].jobid));
   }
 
-  async getImages(event) {
-    //c1640c5d-7b58-43dd-94a3-90e31b63062d
-
-  
-
-    let file = event.target.files[0];
-    // let url = URL.createObjectURL(file);
-    // console.log(file.name);
-    // console.log(url);
-    // this.setState(
-    //   {
-    //     imageList: [...this.state.imageList, url],
-    //     loading: false,
-    //   },
-    //   () => {
-    //     console.log(this.state.imageList);
-    //   }
-    // );
-
-
-    // const { data, geterror } = await supabase.storage
-    //         .from(this.props.session.user.id)
-    //         .list("2");
-    //       console.log(data);
-      
-
-    // let urlArray = []
-    // for (let index = 1; index < data.length; index++) {
-    //     const { publicURL, urlerror } = supabase.storage
-    //       .from("c1640c5d-7b58-43dd-94a3-90e31b63062d")
-    //       .getPublicUrl(`2/${data[index].name}`);
-    //     urlArray.push(publicURL)   
-    // }
-
-    // console.log(urlArray);
-
-
-
-    let data = [...this.state.data]
-    console.log(data);
-    data.forEach((car, index) => {
-      
-      console.log(car.id);
-    })
-    
-    //upload files to supabase storage
-    const { uploaddata, error } = await supabase.storage
-      .from("c1640c5d-7b58-43dd-94a3-90e31b63062d")
-      .upload(`3/${file.name}`, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
-
-
-
-
-    // //get files
-    // const { data, geterror } = await supabase.storage
-    //   .from("c1640c5d-7b58-43dd-94a3-90e31b63062d")
-    //   .list("2");
-    // console.log(data);
-
-    // const { publicURL, urlerror } = supabase.storage
-    //   .from("c1640c5d-7b58-43dd-94a3-90e31b63062d")
-    //   .getPublicUrl("2");
-    // console.log(publicURL);
-  }
 
   getCar(car){
     console.log(car);

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import supabase from "./supabase";
 import CreateJob from "./CreateJob";
+import Invoice from "./Invoice";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -13,6 +14,8 @@ class App extends Component {
       sprayaway: false,
       createJob: false,
       images: [],
+      invoice: false,
+      car: null,
     };
 
     this.addJob = this.addJob.bind(this);
@@ -22,6 +25,9 @@ class App extends Component {
     this.sendToJobs = this.sendToJobs.bind(this);
     this.updateJobs = this.updateJobs.bind(this);
     this.getImages = this.getImages.bind(this);
+    this.changeJobStatus = this.changeJobStatus.bind(this);
+    this.generateInvoice = this.generateInvoice.bind(this);
+    this.closeInvoice = this.closeInvoice.bind(this);
   }
 
   async componentDidMount() {
@@ -46,6 +52,7 @@ class App extends Component {
             },
             () => {
               console.log(this.state);
+              console.log(this.props);
             }
           );
         }
@@ -71,6 +78,10 @@ class App extends Component {
           this.updateJobs();
           
         }
+
+        if(payload.eventType === "UPDATE"){
+          this.updateJobs();
+        }
       })
       .subscribe();
 
@@ -81,7 +92,7 @@ class App extends Component {
     this.setState({
       data: data
     })
-    this.getImages();
+    this.getImages(); 
   }
 
   addJob(event) {
@@ -151,6 +162,55 @@ class App extends Component {
     })
   }
 
+  async changeJobStatus(event, car){
+    event.preventDefault();
+    console.log(event);
+    console.log(car);
+    if(event.target.name === 'accept'){
+      console.log(`Accept job clicked on ${car.jobid}`);
+      const { accdata, accerror } = await supabase
+        .from('job')
+        .update({ accepted: 'true' })
+        .eq(`jobid`, `${car.jobid}`)
+    }
+    if(event.target.name === 'decline'){
+      console.log(`Decline job clicked on ${car.jobid}`);
+      const { decdata, decerror } = await supabase
+        .from('job')
+        .update({ accepted: 'false' })
+        .eq(`jobid`, `${car.jobid}`)
+    }
+
+        
+    
+
+
+
+  }
+
+  print(){
+    window.print();
+  }
+
+
+  generateInvoice(event, car){
+    this.setState({
+      invoice: true,
+      hidden: true,
+      car: car,
+    })
+    
+  }
+
+  closeInvoice(){
+    this.setState({
+      hidden: false,
+      invoice: false,
+      car: null,
+    })
+  }
+
+
   render() {
     return (
       <div>
@@ -169,6 +229,7 @@ class App extends Component {
                   <p>{car.DeliveryMethod}</p>
                   <p>Time requested: {car.time_requested}</p>
                   <p>Job Descripton: {car.description}</p>
+                  <p>Job Status: {car.accepted ? 'Job Accepted!' : 'Job Rejected :('}</p>
                   {car.images && car.images.map((image, carindex) => (
                     <div key={carindex}>
                       <img src={image} height='100' width='100'/>
@@ -184,13 +245,14 @@ class App extends Component {
                   )}
                   {this.state.sprayaway && (
                     <div>
-                      <button>SPRAYAWAY ONLY BUTTON</button>
+                      <button name='accept' onClick={event => this.changeJobStatus(event, car)}>Accept Job</button>
+                      <button name='decline' onClick={event => this.changeJobStatus(event, car)}>Decline Job</button>
+                      <button onClick={event => this.generateInvoice(event, car)}>Generate Invoice</button>
                     </div>
                   )}
-                  <button onClick={(event) => this.deleteJob(event, index)}>
+                  <button name='accept' onClick={(event) => this.deleteJob(event, index)}>
                     Delete Job
                   </button>
-                  <button onClick={this.getCar(car)}>get car</button>
                 </div>
               ))}
           </div>
@@ -198,6 +260,7 @@ class App extends Component {
         {this.state.createJob && (
           <CreateJob getImages={this.getImages} getJob={this.getJob} session={this.state.session} sendToJobs={this.sendToJobs}/>
         )}
+        {this.state.invoice && <Invoice car={this.state.car} closeInvoice={this.closeInvoice} showInvoice={this.props.showInvoice}/>}
       </div>
     );
   }

@@ -4,7 +4,7 @@ import ViewJobs from "./ViewJobs";
 import Signup from "./Signup";
 import Profile from "./Profile";
 import '../styles/App.css'
-import Image from "./Image";
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -17,6 +17,7 @@ export default class App extends Component {
       session: null,
       error: null,
       profile:false,
+      invoice: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -24,6 +25,7 @@ export default class App extends Component {
     this.passSession = this.passSession.bind(this);
     this.showProfile = this.showProfile.bind(this)
     this.closeProfile = this.closeProfile.bind(this);
+    this.showInvoice = this.showInvoice.bind(this)
   }
 
   async onSubmit(event) {
@@ -83,11 +85,16 @@ export default class App extends Component {
       profile: false
     })
   }
+  showInvoice(){
+    this.setState({
+      invoice: !this.state.invoice,
+    })
+  }
   render() {
     return (
       
         <div>
-            <h1>Sprayaway Web App</h1>
+            <h1>Sprayaway</h1>
           {!this.state.signup && !this.state.session && (
             <div>
               <h2>Sign In here</h2>
@@ -113,7 +120,7 @@ export default class App extends Component {
               </form>
             </div>
           )}
-          {this.state.session && (
+          {!this.state.invoice && this.state.session && (
             <div>
               <h2>Signed in as {this.state.session.user.email}</h2>
               <button onClick={() => this.setState({ session: null,signedIn: false, profile: false, })}>
@@ -128,7 +135,7 @@ export default class App extends Component {
           )}
           {this.state.session && !this.state.profile && (
             <div>
-              <ViewJobs session={this.state.session} />
+              <ViewJobs showInvoice={this.showInvoice} session={this.state.session} />
               
               <button onClick={this.showProfile}>Show Profile</button>
             </div>

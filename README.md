@@ -11,6 +11,9 @@ Users,
 Jobs,
 Images,
 
+
+
 How it is used:
 A user will create an account and can then log in to create jobs and upload images to jobs so the SMART repairer can see the job before accepting / declining the job.
 Once accepted / declined the user will be notified.
+Allows SMART repairer to generate an invoice from a job and print or send as email.

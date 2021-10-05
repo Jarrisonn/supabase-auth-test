@@ -8,6 +8,7 @@ class Invoice extends Component {
     this.state = {
       car: null,
       loading: true,
+      printing: false,
     };
 
     this.print = this.print.bind(this);
@@ -27,8 +28,14 @@ class Invoice extends Component {
   }
   async print() {
     await this.props.showInvoice();
+    this.setState({
+        printing: true,
+    })
     window.print();
     this.props.showInvoice();
+    this.setState({
+        printing: false,
+    })
   }
  async sendEmail(event, car) {
     console.log(car);
@@ -43,7 +50,6 @@ class Invoice extends Component {
     console.log(user);
     window.open(
       `mailto:${user[0].email}?subject=Sprayaway Invoice: ${car.jobid}&body=Make: ${car.car_make}%0D%0AModel: ${car.car_model}%0D%0AReg Number: ${car.car_reg}
-
       `
     );
   }
@@ -75,13 +81,13 @@ class Invoice extends Component {
             </div>
           )}
         </div>
-        <div>
+        {!this.state.printing && <div>
           <button onClick={this.props.closeInvoice}>X</button>
           <button onClick={this.print}>Print</button>
           <button onClick={(event) => this.sendEmail(event, car)}>
             Send Invoice as email
           </button>
-        </div>
+        </div>}
       </div>
     );
   }

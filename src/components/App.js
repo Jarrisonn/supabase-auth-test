@@ -137,7 +137,7 @@ export default class App extends Component {
             <div>
               <ViewJobs showInvoice={this.showInvoice} session={this.state.session} />
               
-              <button onClick={this.showProfile}>Show Profile</button>
+              {!this.state.invoice && <button onClick={this.showProfile}>Show Profile</button>}
             </div>
           )}
           {this.state.signup &&

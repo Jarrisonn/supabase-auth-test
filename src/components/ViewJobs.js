@@ -69,6 +69,7 @@ class App extends Component {
 
         if (payload.eventType === "DELETE") {
           this.updateJobs();
+          
         }
       })
       .subscribe();
@@ -80,6 +81,7 @@ class App extends Component {
     this.setState({
       data: data
     })
+    this.getImages();
   }
 
   addJob(event) {
@@ -106,6 +108,7 @@ class App extends Component {
       .from("job")
       .delete()
       .eq("jobid", String(this.state.data[index].jobid));
+
   }
 
 

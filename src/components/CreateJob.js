@@ -28,6 +28,8 @@ class CreateJob extends Component {
     componentDidMount(){
         this.setState({
             session: this.props.session,
+        }, () => {
+            console.log(this.props);
         })
     }
 
@@ -69,7 +71,9 @@ class CreateJob extends Component {
 
         console.log(this.state);
         this.insertRow();
+        this.props.getImages();
         this.props.getJob();
+        
     }
 
     async insertRow(){

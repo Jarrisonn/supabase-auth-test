@@ -119,6 +119,9 @@ class App extends Component {
     console.log(array);
   }
   async getImages(){
+    this.setState({
+      loading:true,
+    })
     let { data: images, imageError } = await supabase
       .from('images')
       .select('*')
@@ -129,14 +132,20 @@ class App extends Component {
     let cars = [...this.state.data]
     
     cars.forEach((car, carindex) => {
+      car['images'] = []
       images.forEach((image, imageindex) => {
-        car['images'] = []
         if(car.jobid === image.jobid){
           car.images = [...car['images'], image.imageurl]
         }
       })
     })
-    console.log(cars);
+    
+    this.setState({
+      data: [...cars],
+      loading: false,
+    }, () => {
+      console.log(this.state.data);
+    })
   }
 
   render() {
@@ -157,6 +166,11 @@ class App extends Component {
                   <p>{car.DeliveryMethod}</p>
                   <p>Time requested: {car.time_requested}</p>
                   <p>Job Descripton: {car.description}</p>
+                  {car.images && car.images.map((image, carindex) => (
+                    <div key={carindex}>
+                      <img src={image} height='100' width='100'/>
+                    </div>
+                  ))}
                   {!car.delivery && !this.state.sprayaway && (
                     <div>You have requested the car to be collected</div>
                   )}
@@ -179,7 +193,7 @@ class App extends Component {
           </div>
         )}
         {this.state.createJob && (
-          <CreateJob getJob={this.getJob} session={this.state.session} sendToJobs={this.sendToJobs}/>
+          <CreateJob getImages={this.getImages} getJob={this.getJob} session={this.state.session} sendToJobs={this.sendToJobs}/>
         )}
       </div>
     );

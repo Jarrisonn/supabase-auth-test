@@ -57,7 +57,7 @@ class CreateJob extends Component {
         const { publicURL, urlerror } = supabase.storage
         .from(this.state.session.user.id)
         .getPublicUrl(`${this.state.jobid}/${file.name}`);
-        console.log(publicURL);
+        
         this.insertImageTable(publicURL)
 
     }

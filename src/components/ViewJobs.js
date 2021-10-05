@@ -12,14 +12,16 @@ class App extends Component {
       hidden: false,
       sprayaway: false,
       createJob: false,
+      images: [],
     };
 
     this.addJob = this.addJob.bind(this);
     this.getJob = this.getJob.bind(this);
     this.deleteJob = this.deleteJob.bind(this);
-    this.getCar = this.getCar.bind(this)
-    this.sendToJobs = this.sendToJobs.bind(this)
+    this.getCar = this.getCar.bind(this);
+    this.sendToJobs = this.sendToJobs.bind(this);
     this.updateJobs = this.updateJobs.bind(this);
+    this.getImages = this.getImages.bind(this);
   }
 
   async componentDidMount() {
@@ -66,25 +68,12 @@ class App extends Component {
         }
 
         if (payload.eventType === "DELETE") {
-          // console.log("DELETE operation");
-          // let newdata = [...this.state.data];
-          // newdata.forEach((car, index) => {
-          //   if (car.id === payload.old.id) {
-          //     console.log(`car found at: ${index}`);
-          //     let removed = newdata.splice(index, 1);
-          //     console.log(`ViewJobs line: 74 ${removed}`);
-          //   }
-          //   console.log(newdata);
-          // });
           this.updateJobs();
-  
         }
       })
       .subscribe();
 
-    // Use the JS library to create a bucket.
-
-    
+      this.getImages();
   }
   async updateJobs(){
     let { data, error } = await supabase.from("job").select("*");
@@ -128,6 +117,26 @@ class App extends Component {
   sendToJobs(array){
     console.log(`called`);
     console.log(array);
+  }
+  async getImages(){
+    let { data: images, imageError } = await supabase
+      .from('images')
+      .select('*')
+      console.log(images);
+
+    console.log('got images');
+
+    let cars = [...this.state.data]
+    
+    cars.forEach((car, carindex) => {
+      images.forEach((image, imageindex) => {
+        car['images'] = []
+        if(car.jobid === image.jobid){
+          car.images = [...car['images'], image.imageurl]
+        }
+      })
+    })
+    console.log(cars);
   }
 
   render() {

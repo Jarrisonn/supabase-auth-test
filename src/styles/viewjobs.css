@@ -1,0 +1,21 @@
+
+
+@media  screen and (max-width: 325px) {
+    .carousel{
+        max-width: 300px;
+        max-height: 300px;
+    }
+    .img{
+        height: 100%;
+        width: 100%;
+    }
+    
+}
+.carousel{
+    max-height: 500px;
+    max-width: 500px;
+}
+.img{
+    height: 100%;
+    width: 100%;
+}

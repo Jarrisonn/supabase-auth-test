@@ -3,7 +3,10 @@ import supabase from "./supabase";
 import ViewJobs from "./ViewJobs";
 import Signup from "./Signup";
 import Profile from "./Profile";
-import '../styles/App.css'
+import { Button, Container, Form } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ImProfile } from "react-icons/im";
 
 export default class App extends Component {
   constructor(props) {
@@ -16,21 +19,23 @@ export default class App extends Component {
       signup: false,
       session: null,
       error: null,
-      profile:false,
+      profile: false,
       invoice: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.passSession = this.passSession.bind(this);
-    this.showProfile = this.showProfile.bind(this)
+    this.showProfile = this.showProfile.bind(this);
     this.closeProfile = this.closeProfile.bind(this);
-    this.showInvoice = this.showInvoice.bind(this)
+    this.showInvoice = this.showInvoice.bind(this);
+    this.closeSignup = this.closeSignup.bind(this);
   }
 
   async onSubmit(event) {
     event.preventDefault();
 
+    console.log("submitted");
     const { user, session, error } = await supabase.auth.signIn({
       email: this.state.email,
       password: this.state.password,
@@ -65,67 +70,107 @@ export default class App extends Component {
     });
   }
 
-  passSession(session){
+  passSession(session) {
     console.log(session);
-    this.setState({
-      session: session,
-      signup: false,
-      signedIn: true,
-    },() => {
-      console.log(this.state.session);
-    })
+    this.setState(
+      {
+        session: session,
+        signup: false,
+        signedIn: true,
+      },
+      () => {
+        console.log(this.state.session);
+      }
+    );
   }
-  showProfile(){
+  showProfile() {
     this.setState({
-      profile: true
-    })
+      profile: true,
+    });
   }
-  closeProfile(){
+  closeProfile() {
     this.setState({
-      profile: false
-    })
+      profile: false,
+    });
   }
-  showInvoice(){
+  showInvoice() {
     this.setState({
       invoice: !this.state.invoice,
-    })
+    });
+  }
+
+  closeSignup() {
+    console.log("close");
+    this.setState({
+      signup: false,
+    });
   }
   render() {
     return (
-      
-        <div className='app'>
-            <h1>Sprayaway</h1>
+      <Container
+        fluid
+        className="d-flex vh-100 flex-column justify-content-centre align-items-center"
+        style={{ position: "relative" }}
+      >
+        <div>
+          <h1 className="text-center mb-3 fw-bold">Sprayaway</h1>
           {!this.state.signup && !this.state.session && (
             <div>
-              <h2>Sign In here</h2>
-              <h2>
+              <h2 className="text-center">Sign In</h2>
+              <Form
+                className="d-flex flex-column"
+                onSubmit={(event) => this.onSubmit(event)}
+              >
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="email">Email</Form.Label>
+                  <Form.Control
+                    placeholder="Type your email"
+                    type="email"
+                    name="email"
+                    value={this.state.email}
+                    onChange={(event) => this.onChange(event)}
+                  ></Form.Control>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="password">Password</Form.Label>
+                  <Form.Control
+                    placeholder="Type your password"
+                    name="password"
+                    type="password"
+                    value={this.state.password}
+                    onChange={(event) => this.onChange(event)}
+                  ></Form.Control>
+                </Form.Group>
+                <Button type="submit">Submit</Button>
+              </Form>
+              <p className="mt-3">
                 Or if you dont have an account click{" "}
-                <button onClick={() => this.setState({signup: true})}>here</button> to sign up
-              </h2>
-              <form onSubmit={(event) => this.onSubmit(event)}>
-                <label htmlFor="email">Email</label>
-                <input
-                  name="email"
-                  value={this.state.email}
-                  onChange={(event) => this.onChange(event)}
-                ></input>
-                <label htmlFor="password">Password</label>
-                <input
-                  name="password"
-                  type="password"
-                  value={this.state.password}
-                  onChange={(event) => this.onChange(event)}
-                ></input>
-                <button>Submit</button>
-              </form>
+                <Button
+                  variant="secondary"
+                  size="sm1"
+                  onClick={() => this.setState({ signup: true })}
+                >
+                  here
+                </Button>{" "}
+                to sign up
+              </p>
             </div>
           )}
           {!this.state.invoice && this.state.session && (
             <div>
-              <h2>Signed in as {this.state.session.user.email}</h2>
-              <button onClick={() => this.setState({ session: null,signedIn: false, profile: false, })}>
+              <h2 className='text-center'>Signed in as {this.state.session.user.email}</h2>
+              <Button
+                style={{ position: "absolute", top: 10, left: 10 }}
+                onClick={() =>
+                  this.setState({
+                    session: null,
+                    signedIn: false,
+                    profile: false,
+                  })
+                }
+              >
                 Sign Out
-              </button>
+              </Button>
             </div>
           )}
           {!this.state.signup && this.state.error && (
@@ -135,24 +180,42 @@ export default class App extends Component {
           )}
           {this.state.session && !this.state.profile && (
             <div>
-              <ViewJobs showInvoice={this.showInvoice} session={this.state.session} />
-              
-              {!this.state.invoice && <button onClick={this.showProfile}>Show Profile</button>}
+              <ViewJobs
+                showInvoice={this.showInvoice}
+                session={this.state.session}
+              />
+
+              {!this.state.invoice && (
+                <ImProfile
+                  className="text-primary"
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    height: 50,
+                    width: 50,
+                  }}
+                  onClick={this.showProfile}
+                />
+              )}
             </div>
           )}
-          {this.state.signup &&
-          <div>
-              <Signup passSession={this.passSession}/>
-              <button onClick={() => this.setState({signup: false})}>Click here to sign in</button>
-          </div>
-          }
-          {this.state.profile && this.state.session &&
-          <div>
-            <Profile closeProfile={this.closeProfile}/>
-          </div>}
-          
+          {this.state.signup && (
+            <div>
+              <Signup
+                closeSignup={this.closeSignup}
+                passSession={this.passSession}
+              />
+            </div>
+          )}
+          {this.state.profile && this.state.session && (
+            <div>
+              <Profile closeProfile={this.closeProfile} />
+            </div>
+          )}
         </div>
-       
+      </Container>
     );
   }
 }

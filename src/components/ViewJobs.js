@@ -2,6 +2,12 @@ import React, { Component } from "react";
 import supabase from "./supabase";
 import CreateJob from "./CreateJob";
 import Invoice from "./Invoice";
+import { Container, Button, Card, Image, Carousel } from "react-bootstrap";
+import '../styles/viewjobs.css'
+import { MdAddBox } from "react-icons/md";
+
+
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -76,23 +82,22 @@ class App extends Component {
 
         if (payload.eventType === "DELETE") {
           this.updateJobs();
-          
         }
 
-        if(payload.eventType === "UPDATE"){
+        if (payload.eventType === "UPDATE") {
           this.updateJobs();
         }
       })
       .subscribe();
 
-      this.getImages();
+    this.getImages();
   }
-  async updateJobs(){
+  async updateJobs() {
     let { data, error } = await supabase.from("job").select("*");
     this.setState({
-      data: data
-    })
-    this.getImages(); 
+      data: data,
+    });
+    this.getImages();
   }
 
   addJob(event) {
@@ -119,149 +124,179 @@ class App extends Component {
       .from("job")
       .delete()
       .eq("jobid", String(this.state.data[index].jobid));
-
   }
 
-
-  getCar(car){
+  getCar(car) {
     console.log(car);
-    
-
   }
-  sendToJobs(array){
+  sendToJobs(array) {
     console.log(`called`);
     console.log(array);
   }
-  async getImages(){
+  async getImages() {
     this.setState({
-      loading:true,
-    })
+      loading: true,
+    });
     let { data: images, imageError } = await supabase
-      .from('images')
-      .select('*')
-      console.log(images);
+      .from("images")
+      .select("*");
+    console.log(images);
 
-    console.log('got images');
+    console.log("got images");
 
-    let cars = [...this.state.data]
-    
+    let cars = [...this.state.data];
+
     cars.forEach((car, carindex) => {
-      car['images'] = []
+      car["images"] = [];
       images.forEach((image, imageindex) => {
-        if(car.jobid === image.jobid){
-          car.images = [...car['images'], image.imageurl]
+        if (car.jobid === image.jobid) {
+          car.images = [...car["images"], image.imageurl];
         }
-      })
-    })
-    
-    this.setState({
-      data: [...cars],
-      loading: false,
-    }, () => {
-      console.log(this.state.data);
-    })
+      });
+    });
+
+    this.setState(
+      {
+        data: [...cars],
+        loading: false,
+      },
+      () => {
+        console.log(this.state.data);
+      }
+    );
   }
 
-  async changeJobStatus(event, car){
+  async changeJobStatus(event, car) {
     event.preventDefault();
     console.log(event);
     console.log(car);
-    if(event.target.name === 'accept'){
+    if (event.target.name === "accept") {
       console.log(`Accept job clicked on ${car.jobid}`);
       const { accdata, accerror } = await supabase
-        .from('job')
-        .update({ accepted: 'true' })
-        .eq(`jobid`, `${car.jobid}`)
+        .from("job")
+        .update({ accepted: "true" })
+        .eq(`jobid`, `${car.jobid}`);
     }
-    if(event.target.name === 'decline'){
+    if (event.target.name === "decline") {
       console.log(`Decline job clicked on ${car.jobid}`);
       const { decdata, decerror } = await supabase
-        .from('job')
-        .update({ accepted: 'false' })
-        .eq(`jobid`, `${car.jobid}`)
+        .from("job")
+        .update({ accepted: "false" })
+        .eq(`jobid`, `${car.jobid}`);
     }
-
-        
-    
-
-
-
   }
 
-  print(){
+  print() {
     window.print();
   }
 
-
-  generateInvoice(event, car){
+  generateInvoice(event, car) {
     this.setState({
       invoice: true,
       hidden: true,
       car: car,
-    })
-    
+    });
   }
 
-  closeInvoice(){
+  closeInvoice() {
     this.setState({
       hidden: false,
       invoice: false,
       car: null,
-    })
+    });
   }
-
 
   render() {
     return (
-      <div>
-        {this.state.loading && <div>Loading...</div>}
-        {!this.state.hidden && (
-          <div>
-            <h2>Your Jobs: </h2>
-            <button onClick={(event) => this.addJob(event)}>Add Job</button>
-            {!this.state.hidden &&
-              !this.state.loading &&
-              this.state.data.map((car, index) => (
-                <div className="job" key={car.jobid}>
-                  <p>Make: {car.car_make}</p>
-                  <p>Model: {car.car_model}</p>
-                  <p>Reg Number: {car.car_reg}</p>
-                  <p>{car.DeliveryMethod}</p>
-                  <p>Time requested: {car.time_requested}</p>
-                  <p>Job Descripton: {car.description}</p>
-                  <p>Job Status: {car.accepted ? 'Job Accepted!' : 'Job Rejected :('}</p>
-                  {car.images && car.images.map((image, carindex) => (
-                    <div key={carindex}>
-                      <img src={image} height='100' width='100'/>
-                    </div>
-                  ))}
-                  {!car.delivery && !this.state.sprayaway && (
-                    <div>You have requested the car to be collected</div>
-                  )}
-                  {car.delivery && !this.state.sprayaway && (
-                    <div>
-                      You have requested that you deliver the car to the unit
-                    </div>
-                  )}
-                  {this.state.sprayaway && (
-                    <div>
-                      <button name='accept' onClick={event => this.changeJobStatus(event, car)}>Accept Job</button>
-                      <button name='decline' onClick={event => this.changeJobStatus(event, car)}>Decline Job</button>
-                      <button onClick={event => this.generateInvoice(event, car)}>Generate Invoice</button>
-                    </div>
-                  )}
-                  <button name='accept' onClick={(event) => this.deleteJob(event, index)}>
-                    Delete Job
-                  </button>
-                </div>
-              ))}
-          </div>
-        )}
-        {this.state.createJob && (
-          <CreateJob getImages={this.getImages} getJob={this.getJob} session={this.state.session} sendToJobs={this.sendToJobs}/>
-        )}
-        {this.state.invoice && <Invoice car={this.state.car} closeInvoice={this.closeInvoice} showInvoice={this.props.showInvoice}/>}
-      </div>
+      <Container className="d-flex jobcontainer">
+        <div>
+          {this.state.loading && <div>Loading...</div>}
+          {!this.state.hidden && (
+            <div className="d-flex flex-column jusify-content-center align-items-center">
+              <h2 className="text-center">Your Jobs: </h2>
+              <Button className='d-flex justify-content-center align-items-center' onClick={(event) => this.addJob(event)}>
+                Add Job
+                <MdAddBox style={{width: 20, height: 20}} className='text-white'/>
+                </Button>
+              {!this.state.hidden &&
+                !this.state.loading &&
+                this.state.data.map((car, index) => (
+                  <Card className="d-flex job mt-3 p-3 mb-3 border-3" key={car.jobid}>
+                    <Card.Title>Job ID: {car.jobid}</Card.Title>
+                    <Card.Text>Make: {car.car_make}</Card.Text>
+                    <Card.Text>Model: {car.car_model}</Card.Text>
+                    <Card.Text>Reg Number: {car.car_reg}</Card.Text>
+
+                    <Card.Text>Time requested: {car.time_requested}</Card.Text>
+                    <Card.Text>Job Descripton: {car.description}</Card.Text>
+                    <Card.Text>
+                      Job Status:{" "}
+                      {car.accepted ? "Job Accepted!" : "Job Rejected :("}
+                    </Card.Text>
+                    <Carousel className='carousel' variant="dark">
+                      {car.images &&
+                        car.images.map((image, carindex) => (
+                          <Carousel.Item>
+                            <Image src={image} key={carindex} className="img w-75 h-75 flex-shrink-1" />
+                          </Carousel.Item>
+                        ))}
+                    </Carousel>
+                    {!car.delivery && !this.state.sprayaway && (
+                      <div>You have requested the car to be collected</div>
+                    )}
+                    {car.delivery && !this.state.sprayaway && (
+                      <div>
+                        You have requested that you deliver the car to the unit
+                      </div>
+                    )}
+                    {this.state.sprayaway && (
+                      <div>
+                        <button
+                          name="accept"
+                          onClick={(event) => this.changeJobStatus(event, car)}
+                        >
+                          Accept Job
+                        </button>
+                        <button
+                          name="decline"
+                          onClick={(event) => this.changeJobStatus(event, car)}
+                        >
+                          Decline Job
+                        </button>
+                        <button
+                          onClick={(event) => this.generateInvoice(event, car)}
+                        >
+                          Generate Invoice
+                        </button>
+                      </div>
+                    )}
+                    <Button
+                      name="accept"
+                      onClick={(event) => this.deleteJob(event, index)}
+                    >
+                      Delete Job
+                    </Button>
+                  </Card>
+                ))}
+            </div>
+          )}
+          {this.state.createJob && (
+            <CreateJob
+              getImages={this.getImages}
+              getJob={this.getJob}
+              session={this.state.session}
+              sendToJobs={this.sendToJobs}
+            />
+          )}
+          {this.state.invoice && (
+            <Invoice
+              car={this.state.car}
+              closeInvoice={this.closeInvoice}
+              showInvoice={this.props.showInvoice}
+            />
+          )}
+        </div>
+      </Container>
     );
   }
 }

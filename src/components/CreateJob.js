@@ -115,9 +115,6 @@ class CreateJob extends Component {
         }, () => {
             console.log(this.state.images);
         })
-
-
-
     }
     
 
@@ -126,8 +123,133 @@ class CreateJob extends Component {
             <div>
                 <form className='addform' onSubmit={event => this.onSubmit(event)}>
                     <h2>Add Job Here: </h2>
-                    <label>Car Make:</label>
-                    <input name='make'value={this.state.make} onChange={this.onChange}/>
+                    <label htmlFor='make'>Car Make:</label>
+                    <select name='make'value={this.state.make} onChange={this.onChange}>
+                        <option value='AC'>AC</option> 
+                        <option value='AK'>AK </option>
+                        <option value='Abarth'>Abarth </option>
+                        <option value='Aixam'>Aixam </option>
+                        <option value='Alfa'>Alfa Romeo </option>
+                        <option value='Alpine'>Alpine </option>
+                        <option value='Alvis'>Alvis </option>
+                        <option value='Ariel'>Ariel </option>
+                        <option value='Aston'>Aston Martin </option>
+                        <option value='Audi'>Audi </option>
+                        <option value='Austin'>Austin </option>
+                        <option value='BMW'>BMW </option>
+                        <option value='Beauford'>Beauford </option>
+                        <option value='Bentley'>Bentley </option>
+                        <option value='Bowler'>Bowler </option>
+                        <option value='Bugatti'>Bugatti </option>
+                        <option value='Buick'>Buick </option>
+                        <option value='CUPRA'>CUPRA </option>
+                        <option value='Cadillac'>Cadillac </option>
+                        <option value='Carbodies'>Carbodies </option>
+                        <option value='Caterham'>Caterham </option>
+                        <option value='Chesil'>Chesil </option>
+                        <option value='Chevrolet'>Chevrolet </option>
+                        <option value='Chrysler'>Chrysler </option>
+                        <option value='Citroen'>Citroen </option>
+                        <option value='Corvette'>Corvette </option>
+                        <option value='DS'>DS AUTOMOBILES </option>
+                        <option value='Dacia'>Dacia </option>
+                        <option value='Daewoo'>Daewoo </option>
+                        <option value='Daihatsu'>Daihatsu </option>
+                        <option value='Daimler'>Daimler </option>
+                        <option value='Dax'>Dax </option>
+                        <option value='Dodge'>Dodge </option>
+                        <option value='FSO'>FSO </option>
+                        <option value='Ferrari'>Ferrari </option>
+                        <option value='Fiat'>Fiat </option>
+                        <option value='Ford'>Ford </option>
+                        <option value='GMC'>GMC </option>
+                        <option value='Gardener'>Gardener </option>
+                        <option value='Gentry'>Gentry </option>
+                        <option value='Ginetta'>Ginetta </option>
+                        <option value='Great'>Great Wall </option>
+                        <option value='Holden'>Holden </option>
+                        <option value='Honda'>Honda </option>
+                        <option value='Humber'>Humber </option>
+                        <option value='Hummer'>Hummer </option>
+                        <option value='Hyundai'>Hyundai </option>
+                        <option value='Infiniti'>Infiniti </option>
+                        <option value='Isuzu'>Isuzu </option>
+                        <option value='Iveco'>Iveco </option>
+                        <option value='Jaguar'>Jaguar </option>
+                        <option value='Jeep'>Jeep </option>
+                        <option value='Jensen'>Jensen </option>
+                        <option value='Kia'>Kia </option>
+                        <option value='LEVC'>LEVC </option>
+                        <option value='Lada'>Lada </option>
+                        <option value='Lamborghini'>Lamborghini </option>
+                        <option value='Lancia'>Lancia </option>
+                        <option value='Land'>Land Rover </option>
+                        <option value='Lexus'>Lexus </option>
+                        <option value='Lincoln'>Lincoln </option>
+                        <option value='Locust'>Locust </option>
+                        <option value='London'>London Taxis International </option>
+                        <option value='Lotus'>Lotus </option>
+                        <option value='MG'>MG </option>
+                        <option value='MINI'>MINI </option>
+                        <option value='Mahindra'>Mahindra </option>
+                        <option value='Maserati'>Maserati </option>
+                        <option value='Maybach'>Maybach </option>
+                        <option value='Mazda'>Mazda </option>
+                        <option value='McLaren'>McLaren </option>
+                        <option value='Mercedes'>Mercedes-Benz </option>
+                        <option value='Microcar'>Microcar </option>
+                        <option value='Mitsubishi'>Mitsubishi </option>
+                        <option value='Morgan'>Morgan </option>
+                        <option value='Morris'>Morris </option>
+                        <option value='Naylor'>Naylor </option>
+                        <option value='Nissan'>Nissan </option>
+                        <option value='Noble'>Noble </option>
+                        <option value='Opel'>Opel </option>
+                        <option value='Perodua'>Perodua </option>
+                        <option value='Peugeot'>Peugeot </option>
+                        <option value='Pilgrim'>Pilgrim </option>
+                        <option value='Polestar'>Polestar </option>
+                        <option value='Pontiac'>Pontiac </option>
+                        <option value='Porsche'>Porsche </option>
+                        <option value='Proton'>Proton </option>
+                        <option value='REO'>REO </option>
+                        <option value='Radical'>Radical </option>
+                        <option value='Rage'>Rage </option>
+                        <option value='Raptor'>Raptor </option>
+                        <option value='Reliant'>Reliant </option>
+                        <option value='Renault'>Renault </option>
+                        <option value='Replica'>Replica </option>
+                        <option value='Reva'>Reva </option>
+                        <option value='Riley'>Riley </option>
+                        <option value='Robin'>Robin Hood </option>
+                        <option value='Rolls'>Rolls-Royce </option>
+                        <option value='Rover'>Rover </option>
+                        <option value='SEAT'>SEAT </option>
+                        <option value='SKODA'>SKODA </option>
+                        <option value='Saab'>Saab </option>
+                        <option value='Sebring'>Sebring </option>
+                        <option value='Smart'>Smart </option>
+                        <option value='Spyker'>Spyker </option>
+                        <option value='SsangYong'>SsangYong </option>
+                        <option value='Subaru'>Subaru </option>
+                        <option value='Sunbeam'>Sunbeam </option>
+                        <option value='Suzuki'>Suzuki </option>
+                        <option value='TVR'>TVR </option>
+                        <option value='Talbot'>Talbot </option>
+                        <option value='Tesla'>Tesla </option>
+                        <option value='Tiger'>Tiger </option>
+                        <option value='Toyota'>Toyota </option>
+                        <option value='Triumph'>Triumph </option>
+                        <option value='Ultima'>Ultima </option>
+                        <option value='Vauxhall'>Vauxhall </option>
+                        <option value='Venturi'>Venturi </option>
+                        <option value='Volkswagen'>Volkswagen </option>
+                        <option value='Volvo'>Volvo </option>
+                        <option value='Westfield'>Westfield </option>
+                        <option value='Wolseley'>Wolseley </option>
+                        <option value='Yamaha'>Yamaha </option>
+                        <option value='Zenos'>Zenos </option>
+                    </select>
                     <label>Car Model:</label>
                     <input name='model'value={this.state.model} onChange={this.onChange}/>
                     <label>Car Reg:</label>

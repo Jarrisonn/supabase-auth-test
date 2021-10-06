@@ -93,7 +93,7 @@ export default class App extends Component {
   render() {
     return (
       
-        <div>
+        <div className='app'>
             <h1>Sprayaway</h1>
           {!this.state.signup && !this.state.session && (
             <div>

@@ -3,10 +3,8 @@ import supabase from "./supabase";
 import CreateJob from "./CreateJob";
 import Invoice from "./Invoice";
 import { Container, Button, Card, Image, Carousel } from "react-bootstrap";
-import '../styles/viewjobs.css'
+import "../styles/viewjobs.css";
 import { MdAddBox } from "react-icons/md";
-
-
 
 class App extends Component {
   constructor(props) {
@@ -208,20 +206,30 @@ class App extends Component {
 
   render() {
     return (
-      <Container className="d-flex jobcontainer">
+      <Container className="d-flex jobcontainer justify-content-center">
         <div>
           {this.state.loading && <div>Loading...</div>}
           {!this.state.hidden && (
             <div className="d-flex flex-column jusify-content-center align-items-center">
               <h2 className="text-center">Your Jobs: </h2>
-              <Button className='d-flex justify-content-center align-items-center' onClick={(event) => this.addJob(event)}>
+              <Button
+                className="d-flex justify-content-center align-items-center"
+                onClick={(event) => this.addJob(event)}
+              >
                 Add Job
-                <MdAddBox style={{width: 20, height: 20}} className='text-white'/>
-                </Button>
+                <MdAddBox
+                  style={{ width: 20, height: 20 }}
+                  className="text-white"
+                />
+              </Button>
               {!this.state.hidden &&
                 !this.state.loading &&
                 this.state.data.map((car, index) => (
-                  <Card className="d-flex job mt-3 p-3 mb-3 border-3" key={car.jobid}>
+                  <Card
+                    style={{minWidth: '540px'}}
+                    className="d-flex  job mt-3 p-3 mb-3 border-3"
+                    key={car.jobid}
+                  >
                     <Card.Title>Job ID: {car.jobid}</Card.Title>
                     <Card.Text>Make: {car.car_make}</Card.Text>
                     <Card.Text>Model: {car.car_model}</Card.Text>
@@ -233,11 +241,20 @@ class App extends Component {
                       Job Status:{" "}
                       {car.accepted ? "Job Accepted!" : "Job Rejected :("}
                     </Card.Text>
-                    <Carousel className='carousel' variant="dark">
+                    <Carousel className="carousel" variant="dark">
                       {car.images &&
                         car.images.map((image, carindex) => (
-                          <Carousel.Item>
-                            <Image src={image} key={carindex} className="img w-75 h-75 flex-shrink-1" />
+                          <Carousel.Item
+                            style={{ maxWidth: 500, maxHeight: 500 }}
+                          >
+                            <Image
+                              rounded
+                              src={image}
+                              key={carindex}
+                              className="img"
+                              height="100%"
+                              width="100%"
+                            />
                           </Carousel.Item>
                         ))}
                     </Carousel>
@@ -250,27 +267,33 @@ class App extends Component {
                       </div>
                     )}
                     {this.state.sprayaway && (
-                      <div>
-                        <button
+                      <div className="d-flex justify-content-between m-3">
+                        <Button
+                          style={{ minWidth: "145px" }}
                           name="accept"
                           onClick={(event) => this.changeJobStatus(event, car)}
                         >
                           Accept Job
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                          className='btn-warning'
+                          style={{ minWidth: "145px" }}
                           name="decline"
                           onClick={(event) => this.changeJobStatus(event, car)}
                         >
                           Decline Job
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                          className='btn-success'
+                          style={{ minWidth: "145px" }}
                           onClick={(event) => this.generateInvoice(event, car)}
                         >
                           Generate Invoice
-                        </button>
+                        </Button>
                       </div>
                     )}
                     <Button
+                      className='btn-danger'
                       name="accept"
                       onClick={(event) => this.deleteJob(event, index)}
                     >

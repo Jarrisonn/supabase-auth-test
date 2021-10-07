@@ -211,7 +211,7 @@ export default class App extends Component {
           )}
           {this.state.profile && this.state.session && (
             <div>
-              <Profile closeProfile={this.closeProfile} />
+              <Profile session={this.state.session} closeProfile={this.closeProfile} />
             </div>
           )}
         </div>

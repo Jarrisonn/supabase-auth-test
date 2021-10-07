@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { format } from "date-fns";
 import supabase from "./supabase";
+import {Button,Card} from 'react-bootstrap'
 class Invoice extends Component {
   constructor(props) {
     super(props);
@@ -56,8 +57,8 @@ class Invoice extends Component {
   render() {
     let car = this.state.car;
     return (
-      <div>
-        <div>
+      <Card className='d-flex align-items-center border-3 p-3'>
+        <div className='text-center'>
           {this.state.loading && <p>Loading car...</p>}
           {!this.state.loading && (
             <div>
@@ -73,7 +74,7 @@ class Invoice extends Component {
                 Job Creation date:{" "}
                 {format(new Date(car.created_at), "dd/MM/yyy")}
               </p>
-              {car.images.map((image, index) => (
+              {!this.state.printing && car.images.map((image, index) => (
                 <div>
                   <img src={image} width="200" height="200" />
                 </div>
@@ -81,14 +82,15 @@ class Invoice extends Component {
             </div>
           )}
         </div>
-        {!this.state.printing && <div>
-          <button onClick={this.props.closeInvoice}>X</button>
-          <button onClick={this.print}>Print</button>
-          <button onClick={(event) => this.sendEmail(event, car)}>
+        {!this.state.printing && <div style={{width: '100%'}} className='d-flex justify-content-around'>
+          <Button style={{minWidth: '178px'}} onClick={this.print}>Print</Button>
+          <Button style={{minWidth: '178px'}}  onClick={(event) => this.sendEmail(event, car)}>
             Send Invoice as email
-          </button>
+          </Button>
+          <Button style={{minWidth: '178px'}}  onClick={this.props.closeInvoice}>Close Invoice</Button>
         </div>}
-      </div>
+        
+      </Card>
     );
   }
 }

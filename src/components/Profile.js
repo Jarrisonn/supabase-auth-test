@@ -114,10 +114,12 @@ class Profile extends Component {
   render() {
     return (
       <div>
-        <h1>Your Profile</h1>
+          <Button style={{position: 'absolute', top: 10, right: 10, width: 'fit-content'}} onClick={this.props.closeProfile}>X</Button>
+        <h1 className='text-center'>Your Profile</h1>
+        
         {this.state.loading && <div>Loading...</div>}
         {!this.state.editing && !this.state.loading && (
-          <div>
+          <div className='text-center d-flex flex-column '>
             <p>First Name: {this.state.user.first_name}</p>
             <p>Last Name: {this.state.user.last_name}</p>
             <p>Email: {this.state.user.email}</p>
@@ -126,11 +128,7 @@ class Profile extends Component {
             <p>City: {this.state.user.city}</p>
             <p>County: {this.state.user.county}</p>
             <p>Postcode: {this.state.user.postcode}</p>
-
-            <div>
-              <Button onClick={this.editProfile}>Edit Profile</Button>
-              <Button onClick={this.props.closeProfile}>X</Button>
-            </div>
+            <Button  onClick={this.editProfile}>Edit Profile</Button>
           </div>
         )}
         {this.state.editing && (
@@ -195,10 +193,10 @@ class Profile extends Component {
               </Form.Group>
               <Button type='submit'>Save Profile</Button>
             </Form>
-            
             <Button onClick={this.editProfile}>Close without saving</Button>
           </div>
         )}
+        
       </div>
     );
   }

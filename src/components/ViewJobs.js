@@ -288,7 +288,7 @@ class App extends Component {
                           style={{ minWidth: "145px" }}
                           onClick={(event) => this.generateInvoice(event, car)}
                         >
-                          Generate Invoice
+                          Invoice View
                         </Button>
                       </div>
                     )}

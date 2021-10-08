@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import supabase from "./supabase";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner, Card } from "react-bootstrap";
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -113,23 +113,24 @@ class Profile extends Component {
   }
   render() {
     return (
-      <div>
+      <div className='d-flex flex-column align-items-center text-center'>
           <Button style={{position: 'absolute', top: 10, right: 10, width: 'fit-content'}} onClick={this.props.closeProfile}>X</Button>
-        <h1 className='text-center'>Your Profile</h1>
         
-        {this.state.loading && <div>Loading...</div>}
+        
+        {this.state.loading && <Spinner className='my-3' animation='border'></Spinner>}
         {!this.state.editing && !this.state.loading && (
-          <div className='text-center d-flex flex-column '>
-            <p>First Name: {this.state.user.first_name}</p>
-            <p>Last Name: {this.state.user.last_name}</p>
-            <p>Email: {this.state.user.email}</p>
-            <p>Phone Number: {this.state.user.number}</p>
-            <p>Street Name: {this.state.user.street}</p>
-            <p>City: {this.state.user.city}</p>
-            <p>County: {this.state.user.county}</p>
-            <p>Postcode: {this.state.user.postcode}</p>
-            <Button  onClick={this.editProfile}>Edit Profile</Button>
-          </div>
+          <Card className='text-center d-flex flex-column '>
+            <Card.Title className='text-center'>Your Profile</Card.Title>
+            <Card.Text>First Name: {this.state.user.first_name}</Card.Text>
+            <Card.Text>Last Name: {this.state.user.last_name}</Card.Text>
+            <Card.Text>Email: {this.state.user.email}</Card.Text>
+            <Card.Text>Phone Number: {this.state.user.number}</Card.Text>
+            <Card.Text>Street Name: {this.state.user.street}</Card.Text>
+            <Card.Text>City: {this.state.user.city}</Card.Text>
+            <Card.Text>County: {this.state.user.county}</Card.Text>
+            <Card.Text>Postcode: {this.state.user.postcode}</Card.Text>
+            <Button onClick={this.editProfile}>Edit Profile</Button>
+          </Card>
         )}
         {this.state.editing && (
           <div>

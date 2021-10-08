@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import supabase from "./supabase";
 import CreateJob from "./CreateJob";
 import Invoice from "./Invoice";
-import { Container, Button, Card, Image, Carousel } from "react-bootstrap";
+import { Container, Button, Card, Image, Carousel, Spinner } from "react-bootstrap";
 import "../styles/viewjobs.css";
 import { MdAddBox } from "react-icons/md";
 import Invoicelist from "./InvoiceList";
@@ -223,8 +223,8 @@ class App extends Component {
           {!this.state.hidden && (
             <div className="d-flex flex-column jusify-content-center align-items-center">
               <h2 className="text-center">Your Jobs: </h2>
-              {this.state.loading && <div>Loading...</div>}
-              <Button
+              {this.state.loading && <Spinner className='my-3' animation='border'></Spinner>}
+              {!this.state.loading && <Button
                 className="d-flex justify-content-center align-items-center"
                 onClick={(event) => this.addJob(event)}
               >
@@ -233,7 +233,7 @@ class App extends Component {
                   style={{ width: 20, height: 20 }}
                   className="text-white"
                 />
-              </Button>
+              </Button>}
               {this.state.sprayaway && 
               <Button onClick={this.showInvoiceList}>View Invoices</Button>
               }

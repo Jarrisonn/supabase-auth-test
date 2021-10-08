@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Spinner } from "react-bootstrap";
 import supabase from "./supabase";
 class Invoicelist extends Component {
   constructor(props) {
@@ -58,6 +58,7 @@ class Invoicelist extends Component {
         >
           Close Invoice List
         </Button>
+        {this.state.loading && <Spinner className='my-3' animation='border'></Spinner>}
         {!this.state.loading &&
           this.state.invoices &&
           this.state.invoices.map((invoice, index) => (

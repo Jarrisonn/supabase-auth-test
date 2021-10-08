@@ -309,7 +309,7 @@ class CreateJob extends Component {
           ))}
           <div className='d-flex justify-content-around mt-3' style={{width: '100%'}}>
           <Button style={{minWidth: '85px'}} onClick={this.closeAddJob}>X</Button>
-          <Button style={{minWidth: '85px'}}>Add Job</Button>
+          <Button type='submit' style={{minWidth: '85px'}}>Add Job</Button>
           </div>
         </Form>
       </div>

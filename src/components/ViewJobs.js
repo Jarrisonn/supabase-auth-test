@@ -5,6 +5,8 @@ import Invoice from "./Invoice";
 import { Container, Button, Card, Image, Carousel } from "react-bootstrap";
 import "../styles/viewjobs.css";
 import { MdAddBox } from "react-icons/md";
+import Invoicelist from "./InvoiceList";
+import { isThisSecond } from "date-fns";
 
 class App extends Component {
   constructor(props) {
@@ -20,6 +22,7 @@ class App extends Component {
       images: [],
       invoice: false,
       car: null,
+      invoiceListShow: false,
     };
 
     this.addJob = this.addJob.bind(this);
@@ -32,6 +35,7 @@ class App extends Component {
     this.changeJobStatus = this.changeJobStatus.bind(this);
     this.generateInvoice = this.generateInvoice.bind(this);
     this.closeInvoice = this.closeInvoice.bind(this);
+    this.showInvoiceList = this.showInvoiceList.bind(this)
   }
 
   async componentDidMount() {
@@ -204,14 +208,22 @@ class App extends Component {
     });
   }
 
+  showInvoiceList(){
+    this.setState({
+      invoiceListShow: !this.state.invoiceListShow,
+      hidden: !this.state.hidden,
+    })
+  }
+
+
   render() {
     return (
       <Container className="d-flex jobcontainer justify-content-center">
         <div>
-          {this.state.loading && <div>Loading...</div>}
           {!this.state.hidden && (
             <div className="d-flex flex-column jusify-content-center align-items-center">
               <h2 className="text-center">Your Jobs: </h2>
+              {this.state.loading && <div>Loading...</div>}
               <Button
                 className="d-flex justify-content-center align-items-center"
                 onClick={(event) => this.addJob(event)}
@@ -222,6 +234,9 @@ class App extends Component {
                   className="text-white"
                 />
               </Button>
+              {this.state.sprayaway && 
+              <Button onClick={this.showInvoiceList}>View Invoices</Button>
+              }
               {!this.state.hidden &&
                 !this.state.loading &&
                 this.state.data.map((car, index) => (
@@ -318,6 +333,8 @@ class App extends Component {
               showInvoice={this.props.showInvoice}
             />
           )}
+          {this.state.invoiceListShow && 
+          <Invoicelist showInvoiceList={this.showInvoiceList}/>}
         </div>
       </Container>
     );

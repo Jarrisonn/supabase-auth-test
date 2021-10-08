@@ -106,6 +106,10 @@ class Invoice extends Component {
       { jobid: `${this.state.car.jobid}`, price: `${this.state.price}`, vat_price: `${vatprice}` },
     ])
 
+    this.setState({
+      invoiceFound: true,
+    })
+
   }
 
 

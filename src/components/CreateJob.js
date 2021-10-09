@@ -15,6 +15,9 @@ class CreateJob extends Component {
       time: "",
       description: "",
       images: [],
+      date_requested: "",
+      car_location: "",
+      car_colour: "",
       jobid: uuidv4(),
     };
 
@@ -78,19 +81,19 @@ class CreateJob extends Component {
     console.log(this.state);
 
     //insert into jobs table on supabase
-    const { data, error } = await supabase
-      .from("job")
-      .insert([
-        {
-          jobid: this.state.jobid,
-          userid: this.state.session.user.id,
-          car_model: this.state.model,
-          car_make: this.state.make,
-          car_reg: this.state.reg,
-          time_requested: this.state.time,
-          description: this.state.description,
-        },
-      ]);
+    const { data, error } = await supabase.from("job").insert([
+      {
+        jobid: this.state.jobid,
+        userid: this.state.session.user.id,
+        car_model: this.state.model,
+        car_make: this.state.make,
+        car_reg: this.state.reg,
+        time_requested: this.state.time,
+        description: this.state.description,
+        car_colour: this.state.car_colour,
+        car_location: this.state.car_location,
+      },
+    ]);
   }
   closeAddJob() {
     this.props.getJob();
@@ -98,16 +101,14 @@ class CreateJob extends Component {
 
   async insertImageTable(url) {
     console.log(url);
-    const { imgdata, imgerror } = await supabase
-      .from("images")
-      .insert([
-        {
-          userid: this.state.session.user.id,
-          imageid: uuidv4(),
-          jobid: this.state.jobid,
-          imageurl: url,
-        },
-      ]);
+    const { imgdata, imgerror } = await supabase.from("images").insert([
+      {
+        userid: this.state.session.user.id,
+        imageid: uuidv4(),
+        jobid: this.state.jobid,
+        imageurl: url,
+      },
+    ]);
     if (imgerror) {
       console.log(imgerror.message);
     }
@@ -126,7 +127,7 @@ class CreateJob extends Component {
     return (
       <div>
         <Form className="addform" onSubmit={(event) => this.onSubmit(event)}>
-          <h2>Add Job Here: </h2>
+          <h2 className='text-center'>Add Job Here: </h2>
           <Form.Group>
             <Form.Label htmlFor="make">Car Make:</Form.Label>
             <Form.Select
@@ -277,21 +278,38 @@ class CreateJob extends Component {
             />
           </Form.Group>
           <Form.Group>
-          <Form.Label>Time Requested:</Form.Label>
-          <Form.Control
-            type="time"
-            name="time"
-            value={this.state.time}
-            onChange={this.onChange}
-          />
+            <Form.Label>Car Colour:</Form.Label>
+            <Form.Control
+              name="car_colour"
+              value={this.state.car_colour}
+              onChange={this.onChange}
+            />
           </Form.Group>
           <Form.Group>
-          <Form.Label>Job Description:</Form.Label>
-          <Form.Control as='textarea'
-            name="description"
-            value={this.state.description}
-            onChange={this.onChange}
-          />
+            <Form.Label>Car Location:</Form.Label>
+            <Form.Control
+              name="car_location"
+              value={this.state.car_location}
+              onChange={this.onChange}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Time Requested:</Form.Label>
+            <Form.Control
+              type="time"
+              name="time"
+              value={this.state.time}
+              onChange={this.onChange}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Job Description:</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="description"
+              value={this.state.description}
+              onChange={this.onChange}
+            />
           </Form.Group>
           <Form.Control
             style={{ cursor: "pointer" }}
@@ -307,9 +325,16 @@ class CreateJob extends Component {
               <img height="50" width="50" src={image} />
             </div>
           ))}
-          <div className='d-flex justify-content-around mt-3' style={{width: '100%'}}>
-          <Button style={{minWidth: '85px'}} onClick={this.closeAddJob}>X</Button>
-          <Button type='submit' style={{minWidth: '85px'}}>Add Job</Button>
+          <div
+            className="d-flex justify-content-around mt-3"
+            style={{ width: "100%" }}
+          >
+            <Button style={{ minWidth: "85px" }} onClick={this.closeAddJob}>
+              X
+            </Button>
+            <Button type="submit" style={{ minWidth: "85px" }}>
+              Add Job
+            </Button>
           </div>
         </Form>
       </div>

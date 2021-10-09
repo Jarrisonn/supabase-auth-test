@@ -21,6 +21,7 @@ export default class App extends Component {
       error: null,
       profile: false,
       invoice: false,
+      unfinishedProfile: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -30,6 +31,7 @@ export default class App extends Component {
     this.closeProfile = this.closeProfile.bind(this);
     this.showInvoice = this.showInvoice.bind(this);
     this.closeSignup = this.closeSignup.bind(this);
+    this.unfinishedProfile = this.unfinishedProfile.bind(this);
   }
 
   async onSubmit(event) {
@@ -105,6 +107,16 @@ export default class App extends Component {
       signup: false,
     });
   }
+
+  unfinishedProfile(isProfileUnfinished){
+    console.log(isProfileUnfinished);
+    this.setState({
+      unfinishedProfile: isProfileUnfinished
+    })
+
+  }
+
+
   render() {
     return (
       <Container
@@ -181,6 +193,7 @@ export default class App extends Component {
           {this.state.session && !this.state.profile && (
             <div>
               <ViewJobs
+                unfinishedProfile={this.unfinishedProfile}
                 showInvoice={this.showInvoice}
                 session={this.state.session}
               />
@@ -211,7 +224,7 @@ export default class App extends Component {
           )}
           {this.state.profile && this.state.session && (
             <div>
-              <Profile session={this.state.session} closeProfile={this.closeProfile} />
+              <Profile unfinishedProfile={this.state.unfinishedProfile} session={this.state.session} closeProfile={this.closeProfile} />
             </div>
           )}
         </div>

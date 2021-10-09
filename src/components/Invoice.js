@@ -43,7 +43,9 @@ class Invoice extends Component {
       if(invoice.jobid === this.state.car.jobid){
         console.log(`invoice has already been created`);
         this.setState({
-          invoiceFound: true
+          invoiceFound: true,
+          price: invoice.price,
+          
         })
 
 

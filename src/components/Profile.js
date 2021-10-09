@@ -10,13 +10,14 @@ class Profile extends Component {
       loading: true,
       editing: false,
       authuser: null,
-      first_name: null,
-      last_name: null,
-      number: null,
-      street: null,
-      postcode: null,
-      city: null,
-      county: null,
+      first_name: '',
+      last_name: '',
+      number: '',
+      street: '',
+      postcode: '',
+      city: '',
+      county: '',
+      
     };
     
 
@@ -32,9 +33,14 @@ class Profile extends Component {
       },
       () => {
         this.showProfile(this.state.authuser);
-        console.log(this.state.authuser);
+        console.log(this.state);
+        console.log(this.props);
+        
+        
+      
       }
-    );
+
+      );
   }
 
   async editProfile() {
@@ -197,6 +203,7 @@ class Profile extends Component {
             <Button onClick={this.editProfile}>Close without saving</Button>
           </div>
         )}
+        
         
       </div>
     );

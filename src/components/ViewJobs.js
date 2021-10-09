@@ -2,7 +2,14 @@ import React, { Component } from "react";
 import supabase from "./supabase";
 import CreateJob from "./CreateJob";
 import Invoice from "./Invoice";
-import { Container, Button, Card, Image, Carousel, Spinner } from "react-bootstrap";
+import {
+  Container,
+  Button,
+  Card,
+  Image,
+  Carousel,
+  Spinner,
+} from "react-bootstrap";
 import "../styles/viewjobs.css";
 import { MdAddBox } from "react-icons/md";
 import Invoicelist from "./InvoiceList";
@@ -23,6 +30,7 @@ class App extends Component {
       invoice: false,
       car: null,
       invoiceListShow: false,
+      unfinishedProfile: false,
     };
 
     this.addJob = this.addJob.bind(this);
@@ -35,7 +43,8 @@ class App extends Component {
     this.changeJobStatus = this.changeJobStatus.bind(this);
     this.generateInvoice = this.generateInvoice.bind(this);
     this.closeInvoice = this.closeInvoice.bind(this);
-    this.showInvoiceList = this.showInvoiceList.bind(this)
+    this.showInvoiceList = this.showInvoiceList.bind(this);
+    this.checkProfile = this.checkProfile.bind(this);
   }
 
   async componentDidMount() {
@@ -93,6 +102,7 @@ class App extends Component {
       .subscribe();
 
     this.getImages();
+    this.checkProfile();
   }
   async updateJobs() {
     let { data, error } = await supabase.from("job").select("*");
@@ -208,13 +218,32 @@ class App extends Component {
     });
   }
 
-  showInvoiceList(){
+  showInvoiceList() {
     this.setState({
       invoiceListShow: !this.state.invoiceListShow,
       hidden: !this.state.hidden,
-    })
+    });
   }
 
+  async checkProfile() {
+    let { data: user, error } = await supabase
+      .from("user")
+      .select("*")
+      .eq("id", `${this.state.session.user.id}`);
+
+      console.log(user);
+      user.forEach(use => {
+        console.log(use);
+        if(use.city === null || use.county === null || use.first_name === null || use.last_name === null || use.number === null || use.postcode === null || use.street === null || use.county.length < 3){
+          this.setState({
+            unfinishedProfile: true,
+          }, () => {
+            console.log(this.state);
+            this.props.unfinishedProfile(this.state.unfinishedProfile)
+          })
+        }
+      })
+  }
 
   render() {
     return (
@@ -223,25 +252,34 @@ class App extends Component {
           {!this.state.hidden && (
             <div className="d-flex flex-column jusify-content-center align-items-center">
               <h2 className="text-center">Your Jobs: </h2>
-              {this.state.loading && <Spinner className='my-3' animation='border'></Spinner>}
-              {!this.state.loading && <Button
-                className="d-flex justify-content-center align-items-center"
-                onClick={(event) => this.addJob(event)}
-              >
-                Add Job
-                <MdAddBox
-                  style={{ width: 20, height: 20 }}
-                  className="text-white"
-                />
-              </Button>}
-              {this.state.sprayaway && 
-              <Button onClick={this.showInvoiceList}>View Invoices</Button>
+              {this.state.unfinishedProfile &&
+              <div>
+                <h3>Please fill in your profile by clicking the icon on the top right before you can add any jobs.</h3>
+              </div>
               }
+              {this.state.loading && (
+                <Spinner className="my-3" animation="border"></Spinner>
+              )}
+              {!this.state.unfinishedProfile && !this.state.loading && (
+                <Button
+                  className="d-flex justify-content-center align-items-center"
+                  onClick={(event) => this.addJob(event)}
+                >
+                  Add Job
+                  <MdAddBox
+                    style={{ width: 20, height: 20 }}
+                    className="text-white"
+                  />
+                </Button>
+              )}
+              {this.state.sprayaway && (
+                <Button onClick={this.showInvoiceList}>View Invoices</Button>
+              )}
               {!this.state.hidden &&
                 !this.state.loading &&
                 this.state.data.map((car, index) => (
                   <Card
-                    style={{minWidth: '540px'}}
+                    style={{ minWidth: "540px" }}
                     className="d-flex  job mt-3 p-3 mb-3 border-3"
                     key={car.jobid}
                   >
@@ -291,7 +329,7 @@ class App extends Component {
                           Accept Job
                         </Button>
                         <Button
-                          className='btn-warning'
+                          className="btn-warning"
                           style={{ minWidth: "145px" }}
                           name="decline"
                           onClick={(event) => this.changeJobStatus(event, car)}
@@ -299,7 +337,7 @@ class App extends Component {
                           Decline Job
                         </Button>
                         <Button
-                          className='btn-success'
+                          className="btn-success"
                           style={{ minWidth: "145px" }}
                           onClick={(event) => this.generateInvoice(event, car)}
                         >
@@ -308,7 +346,7 @@ class App extends Component {
                       </div>
                     )}
                     <Button
-                      className='btn-danger'
+                      className="btn-danger"
                       name="accept"
                       onClick={(event) => this.deleteJob(event, index)}
                     >
@@ -333,8 +371,9 @@ class App extends Component {
               showInvoice={this.props.showInvoice}
             />
           )}
-          {this.state.invoiceListShow && 
-          <Invoicelist showInvoiceList={this.showInvoiceList}/>}
+          {this.state.invoiceListShow && (
+            <Invoicelist showInvoiceList={this.showInvoiceList} />
+          )}
         </div>
       </Container>
     );

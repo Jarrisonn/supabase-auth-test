@@ -55,8 +55,6 @@ class App extends Component {
     }
     this.setState(
       {
-        data: data,
-        loading: false,
         session: this.props.session,
       },
       () => {
@@ -100,6 +98,26 @@ class App extends Component {
         }
       })
       .subscribe();
+
+    let { data: users, userserror } = await supabase.from("user").select("*");
+
+    carData.forEach((car) => {
+      users.forEach((user) => {
+        if (car.userid === user.id) {
+          car.user = user;
+        }
+      });
+    });
+
+    this.setState(
+      {
+        data: carData,
+        loading: false,
+      },
+      () => {
+        console.log(this.state);
+      }
+    );
 
     this.getImages();
     this.checkProfile();
@@ -231,18 +249,30 @@ class App extends Component {
       .select("*")
       .eq("id", `${this.state.session.user.id}`);
 
-      console.log(user);
-      user.forEach(use => {
-        console.log(use);
-        if(use.city === null || use.county === null || use.first_name === null || use.last_name === null || use.number === null || use.postcode === null || use.street === null || use.county.length < 3){
-          this.setState({
+    console.log(user);
+    user.forEach((use) => {
+      console.log(use);
+      if (
+        use.city === null ||
+        use.county === null ||
+        use.first_name === null ||
+        use.last_name === null ||
+        use.number === null ||
+        use.postcode === null ||
+        use.street === null ||
+        use.county.length < 3
+      ) {
+        this.setState(
+          {
             unfinishedProfile: true,
-          }, () => {
+          },
+          () => {
             console.log(this.state);
-            this.props.unfinishedProfile(this.state.unfinishedProfile)
-          })
-        }
-      })
+            this.props.unfinishedProfile(this.state.unfinishedProfile);
+          }
+        );
+      }
+    });
   }
 
   render() {
@@ -252,11 +282,14 @@ class App extends Component {
           {!this.state.hidden && (
             <div className="d-flex flex-column jusify-content-center align-items-center">
               <h2 className="text-center">Your Jobs: </h2>
-              {this.state.unfinishedProfile &&
-              <div>
-                <h3>Please fill in your profile by clicking the icon on the top right before you can add any jobs.</h3>
-              </div>
-              }
+              {this.state.unfinishedProfile && (
+                <div>
+                  <h3>
+                    Please fill in your profile by clicking the icon on the top
+                    right before you can add any jobs.
+                  </h3>
+                </div>
+              )}
               {this.state.loading && (
                 <Spinner className="my-3" animation="border"></Spinner>
               )}
@@ -283,17 +316,33 @@ class App extends Component {
                     className="d-flex  job mt-3 p-3 mb-3 border-3"
                     key={car.jobid}
                   >
-                    <Card.Title>Job ID: {car.jobid}</Card.Title>
-                    <Card.Text>Make: {car.car_make}</Card.Text>
-                    <Card.Text>Model: {car.car_model}</Card.Text>
-                    <Card.Text>Reg Number: {car.car_reg}</Card.Text>
+                      <Card.Title>Job ID: {car.jobid}</Card.Title>
+                    <div className='d-flex'>
+                      <div className="d-flex w-100 justify-content-center align-items-center flex-column text-center">
+                        <Card.Title>Car Details</Card.Title>
+                        <Card.Text>Make: {car.car_make}</Card.Text>
+                        <Card.Text>Model: {car.car_model}</Card.Text>
+                        <Card.Text>Reg Number: {car.car_reg}</Card.Text>
 
-                    <Card.Text>Time requested: {car.time_requested}</Card.Text>
-                    <Card.Text>Job Descripton: {car.description}</Card.Text>
-                    <Card.Text>
-                      Job Status:{" "}
-                      {car.accepted ? "Job Accepted!" : "Job Rejected :("}
-                    </Card.Text>
+                        <Card.Text>
+                          Time requested: {car.time_requested}
+                        </Card.Text>
+                        <Card.Text>Job Descripton: {car.description}</Card.Text>
+                        <Card.Text>
+                          Job Status:{" "}
+                          {car.accepted ? "Job Accepted!" : "Job Rejected :("}
+                        </Card.Text>
+                      </div>
+                      {this.state.sprayaway && <div className="d-flex w-100 flex-column text-center">
+                        <Card.Title>User Details</Card.Title>
+                        <Card.Text>
+                          Name: {`${car.user.first_name} ${car.user.last_name}`}
+                        </Card.Text>
+                        <Card.Text>
+                          Number: {car.user.number}
+                        </Card.Text>
+                      </div>}
+                    </div>
                     <Carousel className="carousel" variant="dark">
                       {car.images &&
                         car.images.map((image, carindex) => (

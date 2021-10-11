@@ -1,13 +1,4 @@
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-form{
-  display: flex;
-  flex-direction: column;
-}
-.app{
-  display: flex;
-  flex-direction: column;
+body{
+  background-color: #ccc;
+  font-family: 'Rubik', sans-serif;
 }

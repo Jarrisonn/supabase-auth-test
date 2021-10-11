@@ -7,6 +7,7 @@ import { Button, Container, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ImProfile } from "react-icons/im";
+import '../styles/App.css'
 
 export default class App extends Component {
   constructor(props) {
@@ -121,7 +122,7 @@ export default class App extends Component {
     return (
       <Container
         fluid
-        className="d-flex vh-100 flex-column justify-content-centre align-items-center"
+        className="d-flex  flex-column justify-content-centre align-items-center"
         style={{ position: "relative" }}
       >
         <div>

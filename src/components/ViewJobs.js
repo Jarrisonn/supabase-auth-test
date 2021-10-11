@@ -10,10 +10,10 @@ import {
   Carousel,
   Spinner,
 } from "react-bootstrap";
-import "../styles/viewjobs.css";
 import { MdAddBox } from "react-icons/md";
 import Invoicelist from "./InvoiceList";
 import { isThisSecond } from "date-fns";
+import "../styles/viewjobs.css";
 
 class App extends Component {
   constructor(props) {
@@ -124,9 +124,26 @@ class App extends Component {
   }
   async updateJobs() {
     let { data, error } = await supabase.from("job").select("*");
-    this.setState({
-      data: data,
+    let { data: users, userserror } = await supabase.from("user").select("*");
+
+    let carData = [...data]
+    carData.forEach((car) => {
+      users.forEach((user) => {
+        if (car.userid === user.id) {
+          car.user = user;
+        }
+      });
     });
+
+    this.setState(
+      {
+        data: carData,
+        loading: false,
+      },
+      () => {
+        console.log(this.state);
+      }
+    );
     this.getImages();
   }
 
@@ -150,10 +167,24 @@ class App extends Component {
     event.preventDefault();
 
     console.log(index);
+
+
+    const { invoicedata, invoicedelerror } = await supabase
+      .from("invoice")
+      .delete()
+      .eq("jobid", String(this.state.data[index].jobid));
+
+
     const { data, error } = await supabase
       .from("job")
       .delete()
       .eq("jobid", String(this.state.data[index].jobid));
+
+      
+
+      this.updateJobs();
+
+
   }
 
   getCar(car) {
@@ -280,7 +311,7 @@ class App extends Component {
       <Container className="d-flex jobcontainer justify-content-center">
         <div>
           {!this.state.hidden && (
-            <div className="d-flex flex-column jusify-content-center align-items-center">
+            <div className="d-flex flex-column justify-content-center align-items-center">
               <h2 className="text-center">Your Jobs: </h2>
               {this.state.unfinishedProfile && (
                 <div>
@@ -308,101 +339,116 @@ class App extends Component {
               {this.state.sprayaway && (
                 <Button onClick={this.showInvoiceList}>View Invoices</Button>
               )}
-              {!this.state.hidden &&
-                !this.state.loading &&
-                this.state.data.map((car, index) => (
-                  <Card
-                    style={{ minWidth: "540px" }}
-                    className="d-flex  job mt-3 p-3 mb-3 border-3"
-                    key={car.jobid}
-                  >
-                      <Card.Title>Job ID: {car.jobid}</Card.Title>
-                    <div className='d-flex'>
-                      <div className="d-flex w-100 justify-content-center align-items-center flex-column text-center">
-                        <Card.Title>Car Details</Card.Title>
-                        <Card.Text>Make: {car.car_make}</Card.Text>
-                        <Card.Text>Model: {car.car_model}</Card.Text>
-                        <Card.Text>Reg Number: {car.car_reg}</Card.Text>
-
-                        <Card.Text>
-                          Time requested: {car.time_requested}
-                        </Card.Text>
-                        <Card.Text>Job Descripton: {car.description}</Card.Text>
-                        <Card.Text>
-                          Job Status:{" "}
-                          {car.accepted ? "Job Accepted!" : "Job Rejected :("}
-                        </Card.Text>
-                      </div>
-                      {this.state.sprayaway && <div className="d-flex w-100 flex-column text-center">
-                        <Card.Title>User Details</Card.Title>
-                        <Card.Text>
-                          Name: {`${car.user.first_name} ${car.user.last_name}`}
-                        </Card.Text>
-                        <Card.Text>
-                          Number: {car.user.number}
-                        </Card.Text>
-                      </div>}
-                    </div>
-                    <Carousel className="carousel" variant="dark">
-                      {car.images &&
-                        car.images.map((image, carindex) => (
-                          <Carousel.Item
-                            style={{ maxWidth: 500, maxHeight: 500 }}
-                          >
-                            <Image
-                              rounded
-                              src={image}
-                              key={carindex}
-                              className="img"
-                              height="100%"
-                              width="100%"
-                            />
-                          </Carousel.Item>
-                        ))}
-                    </Carousel>
-                    {!car.delivery && !this.state.sprayaway && (
-                      <div>You have requested the car to be collected</div>
-                    )}
-                    {car.delivery && !this.state.sprayaway && (
-                      <div>
-                        You have requested that you deliver the car to the unit
-                      </div>
-                    )}
-                    {this.state.sprayaway && (
-                      <div className="d-flex justify-content-between m-3">
-                        <Button
-                          style={{ minWidth: "145px" }}
-                          name="accept"
-                          onClick={(event) => this.changeJobStatus(event, car)}
-                        >
-                          Accept Job
-                        </Button>
-                        <Button
-                          className="btn-warning"
-                          style={{ minWidth: "145px" }}
-                          name="decline"
-                          onClick={(event) => this.changeJobStatus(event, car)}
-                        >
-                          Decline Job
-                        </Button>
-                        <Button
-                          className="btn-success"
-                          style={{ minWidth: "145px" }}
-                          onClick={(event) => this.generateInvoice(event, car)}
-                        >
-                          Invoice View
-                        </Button>
-                      </div>
-                    )}
-                    <Button
-                      className="btn-danger"
-                      name="accept"
-                      onClick={(event) => this.deleteJob(event, index)}
+              <div className='d-flex flex-wrap justify-content-around'>
+                {!this.state.hidden &&
+                  !this.state.loading && this.state.data && 
+                  this.state.data.map((car, index) => (
+                    <Card
+                      style={{
+                       
+                        backgroundColor: "transparent",
+                      }}
+                      className="d-flex text-center job mt-3 p-3 mb-3 border-3"
+                      key={car.jobid}
                     >
-                      Delete Job
-                    </Button>
-                  </Card>
-                ))}
+                      <Card.Title>Job ID: {car.jobid}</Card.Title>
+                      <div className="d-flex flex-column flex-md-row ">
+                        <div className="d-flex w-100 justify-content-center align-items-center flex-column text-center">
+                          <Card.Title>Car Details</Card.Title>
+                          <Card.Text>Make: {car.car_make}</Card.Text>
+                          <Card.Text>Model: {car.car_model}</Card.Text>
+                          <Card.Text>Reg Number: {car.car_reg}</Card.Text>
+
+                          <Card.Text>
+                            Time requested: {car.time_requested}
+                          </Card.Text>
+                          <Card.Text>
+                            Job Descripton: {car.description}
+                          </Card.Text>
+                          <Card.Text>
+                            Job Status:{" "}
+                            {car.accepted ? "Job Accepted!" : "Job Rejected :("}
+                          </Card.Text>
+                        </div>
+                        {this.state.sprayaway &&  (
+                          <div className="d-flex mt-3 mt-md-0 w-100 flex-column text-center">
+                            <Card.Title>User Details</Card.Title>
+                            <Card.Text>
+                              Name:{" "}
+                              {`${car.user.first_name} ${car.user.last_name}`}
+                            </Card.Text>
+                            <Card.Text>Number: {car.user.number}</Card.Text>
+                          </div>
+                        )}
+                      </div>
+                      <Carousel className="mt-3 carousel" variant="dark">
+                        {car.images &&
+                          car.images.map((image, carindex) => (
+                            <Carousel.Item
+                              style={{ maxWidth: 500, maxHeight: 500 }}
+                            >
+                              <Image
+                                rounded
+                                src={image}
+                                key={carindex}
+                                className="img"
+                                height="100%"
+                                width="100%"
+                              />
+                            </Carousel.Item>
+                          ))}
+                      </Carousel>
+                      {!car.delivery && !this.state.sprayaway && (
+                        <div>You have requested the car to be collected</div>
+                      )}
+                      {car.delivery && !this.state.sprayaway && (
+                        <div>
+                          You have requested that you deliver the car to the
+                          unit
+                        </div>
+                      )}
+                      {this.state.sprayaway && (
+                        <div className="d-flex justify-content-between m-3">
+                          <Button
+                            style={{ minWidth: "145px" }}
+                            name="accept"
+                            onClick={(event) =>
+                              this.changeJobStatus(event, car)
+                            }
+                          >
+                            Accept Job
+                          </Button>
+                          <Button
+                            className="btn-warning"
+                            style={{ minWidth: "145px" }}
+                            name="decline"
+                            onClick={(event) =>
+                              this.changeJobStatus(event, car)
+                            }
+                          >
+                            Decline Job
+                          </Button>
+                          <Button
+                            className="btn-success"
+                            style={{ minWidth: "145px" }}
+                            onClick={(event) =>
+                              this.generateInvoice(event, car)
+                            }
+                          >
+                            Invoice View
+                          </Button>
+                        </div>
+                      )}
+                      <Button
+                        className="btn-danger"
+                        name="accept"
+                        onClick={(event) => this.deleteJob(event, index)}
+                      >
+                        Delete Job
+                      </Button>
+                    </Card>
+                  ))}
+              </div>
             </div>
           )}
           {this.state.createJob && (

@@ -124,6 +124,7 @@ class App extends Component {
     this.getImages();
     this.checkProfile();
     this.props.getAddJob(this.addJob)
+    this.props.getCloseJob(this.getJob)
   }
   async updateJobs() {
     let { data, error } = await supabase.from("job").select("*");

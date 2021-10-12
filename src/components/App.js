@@ -27,6 +27,7 @@ export default class App extends Component {
       unfinishedProfile: false,
       menu: false,
       addjob: null,
+      closejob: null,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -40,6 +41,7 @@ export default class App extends Component {
     this.openMenu = this.openMenu.bind(this);
     this.getAddJob = this.getAddJob.bind(this)
     this.closeMenu = this.closeMenu.bind(this)
+    this.getCloseJob = this.getCloseJob.bind(this);
   }
 
  
@@ -158,6 +160,15 @@ export default class App extends Component {
 
     
   }
+  getCloseJob(closejob){
+    this.setState({
+      closejob: closejob,
+    }, () => {
+      console.log(this.state);
+    })
+    console.log(closejob);
+  }
+
 
   render() {
     
@@ -225,7 +236,7 @@ export default class App extends Component {
               >
                 <GiHamburgerMenu />
               </Button>
-              {this.state.menu && <Hamburger appjsState={this.state} closeMenu={this.closeMenu} closeProfile={this.closeProfile}  getAddJob={this.state.addjob} openMenu={this.openMenu} showProfile={this.showProfile} />}
+              {this.state.menu && <Hamburger closeAddJob={this.state.closejob} appjsState={this.state} closeMenu={this.closeMenu} closeProfile={this.closeProfile}  getAddJob={this.state.addjob} openMenu={this.openMenu} showProfile={this.showProfile} />}
               
               <h2 className="text-center">
                 Signed in as {this.state.session.user.email}
@@ -256,6 +267,7 @@ export default class App extends Component {
                 showInvoice={this.showInvoice}
                 session={this.state.session}
                 getAddJob={this.getAddJob}
+                getCloseJob={this.getCloseJob}
               />
               
 

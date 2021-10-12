@@ -8,6 +8,7 @@ class Hamburger extends Component {
 
     this.openProfile = this.openProfile.bind(this);
     this.addJob = this.addJob.bind(this);
+    this.viewJobs = this.viewJobs.bind(this)
   }
   componentDidMount() {
     console.log(this.props);
@@ -21,6 +22,10 @@ class Hamburger extends Component {
   }
   openProfile() {
     this.props.showProfile();
+    this.props.closeMenu();
+  }
+  viewJobs(){
+      this.props.closeAddJob();
     this.props.closeMenu();
   }
   render() {
@@ -38,8 +43,8 @@ class Hamburger extends Component {
           <Nav.Link onClick={this.addJob} eventKey="link-2">
             Add Job
           </Nav.Link>
-          <Nav.Link eventKey="disabled" disabled>
-            Disabled
+          <Nav.Link onClick={this.viewJobs}>
+            View Jobs
           </Nav.Link>
         </Nav>
       </div>

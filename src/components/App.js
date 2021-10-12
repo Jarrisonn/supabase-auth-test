@@ -3,11 +3,13 @@ import supabase from "./supabase";
 import ViewJobs from "./ViewJobs";
 import Signup from "./Signup";
 import Profile from "./Profile";
+import Hamburger from "./Hamburger";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { Button, Container, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ImProfile } from "react-icons/im";
-import '../styles/App.css'
+import "../styles/App.css";
 
 export default class App extends Component {
   constructor(props) {
@@ -23,6 +25,8 @@ export default class App extends Component {
       profile: false,
       invoice: false,
       unfinishedProfile: false,
+      menu: false,
+      addjob: null,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -33,8 +37,12 @@ export default class App extends Component {
     this.showInvoice = this.showInvoice.bind(this);
     this.closeSignup = this.closeSignup.bind(this);
     this.unfinishedProfile = this.unfinishedProfile.bind(this);
+    this.openMenu = this.openMenu.bind(this);
+    this.getAddJob = this.getAddJob.bind(this)
+    this.closeMenu = this.closeMenu.bind(this)
   }
 
+ 
   async onSubmit(event) {
     event.preventDefault();
 
@@ -109,20 +117,59 @@ export default class App extends Component {
     });
   }
 
-  unfinishedProfile(isProfileUnfinished){
+  unfinishedProfile(isProfileUnfinished) {
     console.log(isProfileUnfinished);
     this.setState({
-      unfinishedProfile: isProfileUnfinished
+      unfinishedProfile: isProfileUnfinished,
+    });
+  }
+  openMenu() {
+    console.log("open menu called");
+    this.setState(
+      {
+        menu: !this.state.menu,
+      },
+      () => {
+        console.log(this.state);
+        if(this.state.menu){
+          document.body.classList.add('open')
+        }else{
+          document.body.classList.remove('open')
+        }
+        
+      }
+    );
+  }
+  closeMenu(){
+    console.log('close menu called');
+    this.setState({
+      menu: false
     })
 
   }
+  getAddJob(addjob){
+    this.setState({
+      addjob: addjob
+    }, () => {
+      console.log(this.state);
+    })
+  
+    console.log(addjob); 
 
+    
+  }
 
   render() {
+    
+    
+      
+
+      
+    
     return (
       <Container
         fluid
-        className="d-flex  flex-column justify-content-centre align-items-center"
+        className={`d-flex flex-column justify-content-centre align-items-center`}
         style={{ position: "relative" }}
       >
         <div>
@@ -171,7 +218,18 @@ export default class App extends Component {
           )}
           {!this.state.invoice && this.state.session && (
             <div>
-              <h2 className='text-center'>Signed in as {this.state.session.user.email}</h2>
+              <Button
+                style={{ cursor: "pointer", }}
+                onClick={this.openMenu}
+                className="hamburgericon"
+              >
+                <GiHamburgerMenu />
+              </Button>
+              {this.state.menu && <Hamburger appjsState={this.state} closeMenu={this.closeMenu} closeProfile={this.closeProfile}  getAddJob={this.state.addjob} openMenu={this.openMenu} showProfile={this.showProfile} />}
+              
+              <h2 className="text-center">
+                Signed in as {this.state.session.user.email}
+              </h2>
               <Button
                 style={{ position: "absolute", top: 10, left: 10 }}
                 onClick={() =>
@@ -197,7 +255,9 @@ export default class App extends Component {
                 unfinishedProfile={this.unfinishedProfile}
                 showInvoice={this.showInvoice}
                 session={this.state.session}
+                getAddJob={this.getAddJob}
               />
+              
 
               {!this.state.invoice && (
                 <ImProfile
@@ -225,10 +285,15 @@ export default class App extends Component {
           )}
           {this.state.profile && this.state.session && (
             <div>
-              <Profile unfinishedProfile={this.state.unfinishedProfile} session={this.state.session} closeProfile={this.closeProfile} />
+              <Profile
+                unfinishedProfile={this.state.unfinishedProfile}
+                session={this.state.session}
+                closeProfile={this.closeProfile}
+              />
             </div>
           )}
         </div>
+        
       </Container>
     );
   }

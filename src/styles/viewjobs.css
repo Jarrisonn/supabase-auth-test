@@ -10,14 +10,53 @@
         width: 100%;
     }
 
-    
+   
     
 }
-@media  screen and (max-width: 600px){
-    body{
-        background-color: turquoise;
+
+@media (max-width: 500px) {
+    
+    
+    .job{
+        width: 90vw;
+    }
+    
+    /*buttons beneath job div*/
+    #root > div > div > div:nth-child(3) > div > div > div > div > div > div.d-flex.justify-content-between.m-3 {
+        flex-direction: column;
+        
+    }
+    /*buttons beneath job div*/
+    #root > div > div > div:nth-child(3) > div > div > div > div > div > div.d-flex.justify-content-between.m-3>button {
+        margin-bottom: 5px;
+        
+    }
+    #root > div > div > div:nth-child(3) > div > div > div > div > div > button{
+        width: 100%;
+    }
+   
+    #root > div > div > div:nth-child(3){
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+    /* Hides profile icon and sign out button*/
+    #root > div > div > div:nth-child(3) > svg, #root > div > div > div:nth-child(2) > button{
+        display: none;
+        
+    }
+    #root > div > div > div:nth-child(2) > h2{
+        font-size: medium;
+    }
+    .hamburgericon{
+        height: 50px;
+        width: 50px;
+        position: absolute;
+        top: 0;
     }
 }
+
 .carousel{
     max-height: 500px;
     max-width: 500px;

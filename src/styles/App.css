@@ -2,3 +2,19 @@ body{
   background-color: #ccc;
   font-family: 'Rubik', sans-serif;
 }
+
+#root > div > div > div:nth-child(2) > button.hamburgericon.btn.btn-primary{
+  display: none
+}
+
+
+@media(max-width: 500px) {
+  #root > div > div > div:nth-child(2) > button.hamburgericon.btn.btn-primary{
+    display: block
+  }
+
+  .open{
+    overflow-y: hidden;
+  }
+  
+}

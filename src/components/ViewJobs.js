@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import supabase from "./supabase";
 import CreateJob from "./CreateJob";
 import Invoice from "./Invoice";
+
 import {
   Container,
   Button,
@@ -11,6 +12,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { MdAddBox } from "react-icons/md";
+
 import Invoicelist from "./InvoiceList";
 import { isThisSecond } from "date-fns";
 import "../styles/viewjobs.css";
@@ -121,6 +123,7 @@ class App extends Component {
 
     this.getImages();
     this.checkProfile();
+    this.props.getAddJob(this.addJob)
   }
   async updateJobs() {
     let { data, error } = await supabase.from("job").select("*");
@@ -147,8 +150,8 @@ class App extends Component {
     this.getImages();
   }
 
-  addJob(event) {
-    event.preventDefault();
+  addJob() {
+    
     console.log("job button");
     this.setState({
       hidden: true,
@@ -305,11 +308,13 @@ class App extends Component {
       }
     });
   }
+  
 
   render() {
     return (
       <Container className="d-flex jobcontainer justify-content-center">
         <div>
+          
           {!this.state.hidden && (
             <div className="d-flex flex-column justify-content-center align-items-center">
               <h2 className="text-center">Your Jobs: </h2>
@@ -470,6 +475,7 @@ class App extends Component {
             <Invoicelist showInvoiceList={this.showInvoiceList} />
           )}
         </div>
+       
       </Container>
     );
   }

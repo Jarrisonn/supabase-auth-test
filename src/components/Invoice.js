@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { format } from "date-fns";
 import supabase from "./supabase";
-import {Button,Card,Form} from 'react-bootstrap'
+import {Button,Card,Form, InputGroup} from 'react-bootstrap'
 import { round } from "mathjs";
 class Invoice extends Component {
   constructor(props) {
@@ -107,6 +107,10 @@ class Invoice extends Component {
     .insert([
       { jobid: `${this.state.car.jobid}`, price: `${this.state.price}`, vat_price: `${vatprice}` },
     ])
+    if(error){
+      alert('please enter a price for the invoice')
+      return
+    }
 
     this.setState({
       invoiceFound: true,
@@ -144,10 +148,14 @@ class Invoice extends Component {
             </div>
           )}
         {!this.state.printing && <Form>
-          <Form.Group>
+          <Form.Group className='d-flex flex-column align-items-center'>
             <Form.Label>Price</Form.Label>
-            <Form.Control min='0' type='number' name='price' onChange={event => this.onChange(event)} value={this.state.price}></Form.Control>
-            {this.state.price && <p className='mt-2'>Total inc VAT £: {this.calcVat(this.state.price)}</p>}
+            <InputGroup style={{width: '50%'}} className='d-flex '>
+              <InputGroup.Text>£</InputGroup.Text>
+              <Form.Control  min='0' type='number' name='price' onChange={event => this.onChange(event)} value={this.state.price}></Form.Control>
+            </InputGroup>  
+              {this.state.price && <p className='mt-2'>Total inc VAT £: {this.calcVat(this.state.price)}</p>}
+            
           </Form.Group>
         </Form>}
         {this.state.printing && 

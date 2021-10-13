@@ -138,7 +138,8 @@ export default class App extends Component {
         }else{
           document.body.classList.remove('open')
         }
-        
+        this.state.closejob();
+        this.closeProfile();        
       }
     );
   }
@@ -146,6 +147,12 @@ export default class App extends Component {
     console.log('close menu called');
     this.setState({
       menu: false
+    }, () => {
+      if(this.state.menu){
+        document.body.classList.add('open')
+      }else{
+        document.body.classList.remove('open')
+      }
     })
 
   }
@@ -230,11 +237,13 @@ export default class App extends Component {
           {!this.state.invoice && this.state.session && (
             <div>
               <Button
-                style={{ cursor: "pointer", }}
+                
+                style={{ cursor: "pointer", position: 'absolute', top: 10, left: 10, width: 'fit-content', height: 'fit-content', }}
                 onClick={this.openMenu}
                 className="hamburgericon"
+                
               >
-                <GiHamburgerMenu />
+                <GiHamburgerMenu  />
               </Button>
               {this.state.menu && <Hamburger closeAddJob={this.state.closejob} appjsState={this.state} closeMenu={this.closeMenu} closeProfile={this.closeProfile}  getAddJob={this.state.addjob} openMenu={this.openMenu} showProfile={this.showProfile} />}
               

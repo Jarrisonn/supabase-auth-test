@@ -1,19 +1,27 @@
 import React, { Component } from "react";
-import { Nav } from "react-bootstrap";
+import { Nav,Spinner } from "react-bootstrap";
 import "../styles/hamburger.css";
 import Profile from "./Profile";
 class Hamburger extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+        loading:true,
+    }
+
     this.openProfile = this.openProfile.bind(this);
     this.addJob = this.addJob.bind(this);
     this.viewJobs = this.viewJobs.bind(this)
   }
-  componentDidMount() {
+ async componentDidMount() {
     console.log(this.props);
     console.log('Hamburger Mounted');
     this.props.closeProfile();
+    this.props.closeAddJob();
+    this.setState({
+        loading: false,
+    })
   }
   addJob() {
     this.props.getAddJob();
@@ -31,7 +39,8 @@ class Hamburger extends Component {
   render() {
     return (
       <div>
-        <Nav
+          {this.state.loading && <Spinner></Spinner>}
+        {!this.state.loading && <Nav
           style={{ height: "100vh" }}
           defaultActiveKey="/home"
           className="flex-column"
@@ -46,7 +55,7 @@ class Hamburger extends Component {
           <Nav.Link onClick={this.viewJobs}>
             View Jobs
           </Nav.Link>
-        </Nav>
+        </Nav>}
       </div>
     );
   }

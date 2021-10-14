@@ -14,7 +14,7 @@
     
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     
     
     .job{
@@ -42,9 +42,12 @@
         
     }
     /* Hides profile icon and sign out button*/
-    #root > div > div > div:nth-child(3) > svg, #root > div > div > div:nth-child(2) > button{
+    #root > div > div > div:nth-child(3) > svg, #root > div > div > div:nth-child(2) > button, #root > div > div > div:nth-child(3) > div > div > div > div.d-flex.flex-row.w-100.justify-content-around > button:nth-child(2){
         display: none;
         
+    }
+    #root > div > div > div:nth-child(3) > div > div > div > div.d-flex.flex-row.w-100.justify-content-around.addinvdiv > button.d-flex.justify-content-center.align-items-center.btn.btn-primary{
+        display: none !important;
     }
     #root > div > div > div:nth-child(2) > h2{
         font-size: medium;
@@ -55,6 +58,11 @@
         position: absolute;
         top: 0;
     }
+
+    .addinvdiv{
+        display: none;
+    }
+    
 }
 
 .carousel{

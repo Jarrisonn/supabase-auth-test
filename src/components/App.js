@@ -28,6 +28,9 @@ export default class App extends Component {
       menu: false,
       addjob: null,
       closejob: null,
+      sprayaway: null,
+      getInvoiceList: null,
+      closeInvoiceList: null,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -42,6 +45,10 @@ export default class App extends Component {
     this.getAddJob = this.getAddJob.bind(this)
     this.closeMenu = this.closeMenu.bind(this)
     this.getCloseJob = this.getCloseJob.bind(this);
+    this.signOut = this.signOut.bind(this);
+    this.getSprayaway = this.getSprayaway.bind(this)
+    this.getInvoiceList = this.getInvoiceList.bind(this)
+    this.getCloseInvoiceList = this.getCloseInvoiceList.bind(this)
   }
 
  
@@ -175,6 +182,35 @@ export default class App extends Component {
     })
     console.log(closejob);
   }
+  signOut(){
+    this.setState({
+      session: null,
+      signedIn: false,
+      profile: false,
+      menu: false,
+    })
+    
+  }
+  getSprayaway(sprayaway){
+    console.log(sprayaway);
+
+    this.setState({
+      sprayaway: sprayaway
+    })
+
+  }
+  getInvoiceList(getInvoiceList){
+    console.log(getInvoiceList);
+    this.setState({
+      getInvoiceList: getInvoiceList,
+    })
+  }
+  getCloseInvoiceList(closeInvoiceList){
+    this.setState({
+      closeInvoiceList: closeInvoiceList
+    })
+
+  }
 
 
   render() {
@@ -245,20 +281,14 @@ export default class App extends Component {
               >
                 <GiHamburgerMenu  />
               </Button>
-              {this.state.menu && <Hamburger closeAddJob={this.state.closejob} appjsState={this.state} closeMenu={this.closeMenu} closeProfile={this.closeProfile}  getAddJob={this.state.addjob} openMenu={this.openMenu} showProfile={this.showProfile} />}
+              {this.state.menu && <Hamburger closeInvoiceList={this.state.closeInvoiceList} getInvoiceList={this.state.getInvoiceList} sprayaway={this.state.sprayaway} signOut={this.signOut} closeAddJob={this.state.closejob} appjsState={this.state} closeMenu={this.closeMenu} closeProfile={this.closeProfile}  getAddJob={this.state.addjob} openMenu={this.openMenu} showProfile={this.showProfile} />}
               
               <h2 className="text-center">
                 Signed in as {this.state.session.user.email}
               </h2>
               <Button
                 style={{ position: "absolute", top: 10, left: 10 }}
-                onClick={() =>
-                  this.setState({
-                    session: null,
-                    signedIn: false,
-                    profile: false,
-                  })
-                }
+                onClick={this.signOut}
               >
                 Sign Out
               </Button>
@@ -277,6 +307,9 @@ export default class App extends Component {
                 session={this.state.session}
                 getAddJob={this.getAddJob}
                 getCloseJob={this.getCloseJob}
+                getSprayaway={this.getSprayaway}
+                showInvoiceList={this.getInvoiceList}
+                closeInvoiceList={this.getCloseInvoiceList}
               />
               
 

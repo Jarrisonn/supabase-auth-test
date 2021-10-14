@@ -8,19 +8,24 @@ class Hamburger extends Component {
 
     this.state = {
         loading:true,
+        sprayaway: null,
     }
 
     this.openProfile = this.openProfile.bind(this);
     this.addJob = this.addJob.bind(this);
     this.viewJobs = this.viewJobs.bind(this)
+    this.signOut = this.signOut.bind(this)
+    this.getInvoiceList = this.getInvoiceList.bind(this)
   }
  async componentDidMount() {
     console.log(this.props);
     console.log('Hamburger Mounted');
     this.props.closeProfile();
     this.props.closeAddJob();
+    this.props.closeInvoiceList();
     this.setState({
         loading: false,
+        sprayaway: this.props.sprayaway
     })
   }
   addJob() {
@@ -36,6 +41,13 @@ class Hamburger extends Component {
       this.props.closeAddJob();
     this.props.closeMenu();
   }
+  signOut(){
+    this.props.signOut()
+  }
+  getInvoiceList(){
+    this.props.getInvoiceList();
+    this.props.closeMenu();
+  }
   render() {
     return (
       <div>
@@ -45,7 +57,7 @@ class Hamburger extends Component {
           defaultActiveKey="/home"
           className="flex-column"
         >
-          <Nav.Link href={`#`}>Sign Out</Nav.Link>
+          <Nav.Link onClick={this.signOut}>Sign Out</Nav.Link>
           <Nav.Link onClick={this.openProfile} eventKey="link-1">
             Profile
           </Nav.Link>
@@ -55,6 +67,10 @@ class Hamburger extends Component {
           <Nav.Link onClick={this.viewJobs}>
             View Jobs
           </Nav.Link>
+          {this.state.sprayaway && <Nav.Link onClick={this.getInvoiceList}>
+            View Invoices
+          </Nav.Link>}
+          
         </Nav>}
       </div>
     );

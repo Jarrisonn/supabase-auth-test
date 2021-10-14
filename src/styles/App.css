@@ -8,7 +8,7 @@ body{
 }
 
 
-@media(max-width: 500px) {
+@media(max-width: 600px) {
   #root > div > div > div:nth-child(2) > button.hamburgericon.btn.btn-primary{
     display: block
   }

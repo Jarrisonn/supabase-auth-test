@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import supabase from "./supabase";
 import CreateJob from "./CreateJob";
 import Invoice from "./Invoice";
-
+import { format } from 'date-fns';
 import {
   Container,
   Button,
@@ -47,6 +47,7 @@ class App extends Component {
     this.closeInvoice = this.closeInvoice.bind(this);
     this.showInvoiceList = this.showInvoiceList.bind(this);
     this.checkProfile = this.checkProfile.bind(this);
+    this.closeInvoiceList = this.closeInvoiceList.bind(this)
   }
 
   async componentDidMount() {
@@ -92,6 +93,7 @@ class App extends Component {
         }
 
         if (payload.eventType === "DELETE") {
+          
           this.updateJobs();
         }
 
@@ -123,14 +125,17 @@ class App extends Component {
 
     this.getImages();
     this.checkProfile();
-    this.props.getAddJob(this.addJob)
-    this.props.getCloseJob(this.getJob)
+    this.props.getAddJob(this.addJob);
+    this.props.getCloseJob(this.getJob);
+    this.props.getSprayaway(this.state.sprayaway);
+    this.props.showInvoiceList(this.showInvoiceList)
+    this.props.closeInvoiceList(this.closeInvoiceList)
   }
   async updateJobs() {
     let { data, error } = await supabase.from("job").select("*");
     let { data: users, userserror } = await supabase.from("user").select("*");
 
-    let carData = [...data]
+    let carData = [...data];
     carData.forEach((car) => {
       users.forEach((user) => {
         if (car.userid === user.id) {
@@ -152,7 +157,6 @@ class App extends Component {
   }
 
   addJob() {
-    
     console.log("job button");
     this.setState({
       hidden: true,
@@ -172,23 +176,17 @@ class App extends Component {
 
     console.log(index);
 
-
     const { invoicedata, invoicedelerror } = await supabase
       .from("invoice")
       .delete()
       .eq("jobid", String(this.state.data[index].jobid));
-
 
     const { data, error } = await supabase
       .from("job")
       .delete()
       .eq("jobid", String(this.state.data[index].jobid));
 
-      
-
-      this.updateJobs();
-
-
+    this.updateJobs();
   }
 
   getCar(car) {
@@ -277,6 +275,11 @@ class App extends Component {
       hidden: !this.state.hidden,
     });
   }
+  closeInvoiceList(){
+    this.setState({
+      invoiceListShow: false,
+    })
+  }
 
   async checkProfile() {
     let { data: user, error } = await supabase
@@ -309,13 +312,11 @@ class App extends Component {
       }
     });
   }
-  
 
   render() {
     return (
       <Container className="d-flex jobcontainer justify-content-center">
         <div>
-          
           {!this.state.hidden && (
             <div className="d-flex flex-column justify-content-center align-items-center">
               <h2 className="text-center">Your Jobs: </h2>
@@ -330,28 +331,36 @@ class App extends Component {
               {this.state.loading && (
                 <Spinner className="my-3" animation="border"></Spinner>
               )}
-              {!this.state.unfinishedProfile && !this.state.loading && (
-                <Button
-                  className="d-flex justify-content-center align-items-center"
-                  onClick={(event) => this.addJob(event)}
-                >
-                  Add Job
-                  <MdAddBox
-                    style={{ width: 20, height: 20 }}
-                    className="text-white"
-                  />
-                </Button>
-              )}
-              {this.state.sprayaway && (
-                <Button onClick={this.showInvoiceList}>View Invoices</Button>
-              )}
-              <div className='d-flex flex-wrap justify-content-around'>
+              <div className="d-flex flex-row w-100 justify-content-around addinvdiv">
+                {!this.state.unfinishedProfile && !this.state.loading && (
+                  <Button
+                    style={{ width: "127px" }}
+                    className="d-flex justify-content-center align-items-center"
+                    onClick={(event) => this.addJob(event)}
+                  >
+                    Add Job
+                    <MdAddBox
+                      style={{ width: 20, height: 20 }}
+                      className="text-white ms-1"
+                    />
+                  </Button>
+                )}
+                {this.state.sprayaway && (
+                  <Button
+                    style={{ width: "127px" }}
+                    onClick={this.showInvoiceList}
+                  >
+                    View Invoices
+                  </Button>
+                )}
+              </div>
+              <div className="d-flex flex-wrap justify-content-around">
                 {!this.state.hidden &&
-                  !this.state.loading && this.state.data && 
+                  !this.state.loading &&
+                  this.state.data &&
                   this.state.data.map((car, index) => (
                     <Card
                       style={{
-                       
                         backgroundColor: "transparent",
                       }}
                       className="d-flex text-center job mt-3 p-3 mb-3 border-3"
@@ -364,7 +373,9 @@ class App extends Component {
                           <Card.Text>Make: {car.car_make}</Card.Text>
                           <Card.Text>Model: {car.car_model}</Card.Text>
                           <Card.Text>Reg Number: {car.car_reg}</Card.Text>
-
+                          <Card.Text>
+                            Date requested: {format(new Date(car.date_requested), 'dd/MM/yyyy')}
+                          </Card.Text>
                           <Card.Text>
                             Time requested: {car.time_requested}
                           </Card.Text>
@@ -376,7 +387,7 @@ class App extends Component {
                             {car.accepted ? "Job Accepted!" : "Job Rejected :("}
                           </Card.Text>
                         </div>
-                        {this.state.sprayaway &&  (
+                        {this.state.sprayaway && (
                           <div className="d-flex mt-3 mt-md-0 w-100 flex-column text-center">
                             <Card.Title>User Details</Card.Title>
                             <Card.Text>
@@ -387,10 +398,11 @@ class App extends Component {
                           </div>
                         )}
                       </div>
-                      <Carousel className="mt-3 carousel" variant="dark">
-                        {car.images &&
+                       <Carousel className="mt-3 carousel" variant="dark">
+                        {car.images && 
                           car.images.map((image, carindex) => (
                             <Carousel.Item
+                              
                               style={{ maxWidth: 500, maxHeight: 500 }}
                             >
                               <Image
@@ -476,7 +488,6 @@ class App extends Component {
             <Invoicelist showInvoiceList={this.showInvoiceList} />
           )}
         </div>
-       
       </Container>
     );
   }

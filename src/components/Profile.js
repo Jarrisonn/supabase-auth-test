@@ -125,7 +125,7 @@ class Profile extends Component {
         
         {this.state.loading && <Spinner className='my-3' animation='border'></Spinner>}
         {!this.state.editing && !this.state.loading && (
-          <Card className='text-center d-flex flex-column '>
+          <Card className='text-center p-3 d-flex flex-column '>
             <Card.Title className='text-center'>Your Profile</Card.Title>
             <Card.Text>First Name: {this.state.user.first_name}</Card.Text>
             <Card.Text>Last Name: {this.state.user.last_name}</Card.Text>

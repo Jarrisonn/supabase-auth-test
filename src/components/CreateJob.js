@@ -3,6 +3,7 @@ import "../styles/createjob.css";
 import supabase from "./supabase";
 import { v4 as uuidv4 } from "uuid";
 import { Form, Button } from "react-bootstrap";
+
 class CreateJob extends Component {
   constructor(props) {
     super(props);
@@ -15,9 +16,10 @@ class CreateJob extends Component {
       time: "",
       description: "",
       images: [],
-      date_requested: "",
+      date_requested: null,
       car_location: "",
       car_colour: "",
+      delivery: null,
       jobid: uuidv4(),
     };
 
@@ -26,6 +28,7 @@ class CreateJob extends Component {
     this.insertRow = this.insertRow.bind(this);
     this.closeAddJob = this.closeAddJob.bind(this);
     this.insertImageTable = this.insertImageTable.bind(this);
+    this.deliveryChange = this.deliveryChange.bind(this)
   }
 
   componentDidMount() {
@@ -80,6 +83,8 @@ class CreateJob extends Component {
     console.log("row inserted");
     console.log(this.state);
 
+    
+    
     //insert into jobs table on supabase
     const { data, error } = await supabase.from("job").insert([
       {
@@ -89,9 +94,11 @@ class CreateJob extends Component {
         car_make: this.state.make,
         car_reg: this.state.reg,
         time_requested: this.state.time,
+        date_requested: this.state.date_requested,
         description: this.state.description,
         car_colour: this.state.car_colour,
         car_location: this.state.car_location,
+        delivery: this.state.delivery,
       },
     ]);
   }
@@ -121,6 +128,27 @@ class CreateJob extends Component {
         console.log(this.state.images);
       }
     );
+  }
+  deliveryChange(event){
+    const {value} = event.target
+    console.log(value);
+
+    if(value === 'true'){
+      this.setState({
+        delivery: true
+      }, () => {
+        console.log(this.state);
+      })
+    }else{
+      this.setState({
+        delivery: false
+      }, () => {
+        console.log(this.state);
+      })
+    }
+
+    
+
   }
 
   render() {
@@ -294,12 +322,38 @@ class CreateJob extends Component {
             />
           </Form.Group>
           <Form.Group>
+            <Form.Label>Date Requested:</Form.Label>
+            <Form.Control
+              type="date"
+              name="date_requested"
+              value={this.state.date_requested}
+              onChange={this.onChange}
+            />
+          </Form.Group>
+          <Form.Group>
             <Form.Label>Time Requested:</Form.Label>
             <Form.Control
               type="time"
               name="time"
               value={this.state.time}
               onChange={this.onChange}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Delivery:</Form.Label>
+            <Form.Check
+              type="radio"
+              name="delivery"
+              value='true'
+              onChange={this.deliveryChange}
+              label='I Will deliver the car to the unit'
+            />
+             <Form.Check
+              type="radio"
+              name="delivery"
+              value='false'
+              onChange={this.deliveryChange}
+              label='Car to be collected'
             />
           </Form.Group>
           <Form.Group>
@@ -326,14 +380,14 @@ class CreateJob extends Component {
             </div>
           ))}
           <div
-            className="d-flex justify-content-around mt-3"
+            className="d-flex justify-content-around my-3"
             style={{ width: "100%" }}
           >
-            <Button style={{ minWidth: "85px" }} onClick={this.closeAddJob}>
-              X
-            </Button>
             <Button type="submit" style={{ minWidth: "85px" }}>
               Add Job
+            </Button>
+            <Button style={{ minWidth: "85px" }} onClick={this.closeAddJob}>
+              X
             </Button>
           </div>
         </Form>

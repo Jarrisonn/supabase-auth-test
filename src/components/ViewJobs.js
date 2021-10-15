@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import supabase from "./supabase";
 import CreateJob from "./CreateJob";
 import Invoice from "./Invoice";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import {
   Container,
   Button,
@@ -47,7 +47,7 @@ class App extends Component {
     this.closeInvoice = this.closeInvoice.bind(this);
     this.showInvoiceList = this.showInvoiceList.bind(this);
     this.checkProfile = this.checkProfile.bind(this);
-    this.closeInvoiceList = this.closeInvoiceList.bind(this)
+    this.closeInvoiceList = this.closeInvoiceList.bind(this);
   }
 
   async componentDidMount() {
@@ -93,7 +93,6 @@ class App extends Component {
         }
 
         if (payload.eventType === "DELETE") {
-          
           this.updateJobs();
         }
 
@@ -128,8 +127,8 @@ class App extends Component {
     this.props.getAddJob(this.addJob);
     this.props.getCloseJob(this.getJob);
     this.props.getSprayaway(this.state.sprayaway);
-    this.props.showInvoiceList(this.showInvoiceList)
-    this.props.closeInvoiceList(this.closeInvoiceList)
+    this.props.showInvoiceList(this.showInvoiceList);
+    this.props.closeInvoiceList(this.closeInvoiceList);
   }
   async updateJobs() {
     let { data, error } = await supabase.from("job").select("*");
@@ -275,10 +274,10 @@ class App extends Component {
       hidden: !this.state.hidden,
     });
   }
-  closeInvoiceList(){
+  closeInvoiceList() {
     this.setState({
       invoiceListShow: false,
-    })
+    });
   }
 
   async checkProfile() {
@@ -374,7 +373,12 @@ class App extends Component {
                           <Card.Text>Model: {car.car_model}</Card.Text>
                           <Card.Text>Reg Number: {car.car_reg}</Card.Text>
                           <Card.Text>
-                            Date requested: {format(new Date(car.date_requested), 'dd/MM/yyyy')}
+                            Date of Job Creation:{" "}
+                            {format(new Date(car.created_at), "dd/MM/yyyy")}
+                          </Card.Text>
+                          <Card.Text>
+                            Date requested:{" "}
+                            {format(new Date(car.date_requested), "dd/MM/yyyy")}
                           </Card.Text>
                           <Card.Text>
                             Time requested: {car.time_requested}
@@ -383,9 +387,28 @@ class App extends Component {
                             Job Descripton: {car.description}
                           </Card.Text>
                           <Card.Text>
-                            Job Status:{" "}
+                            Job Accepted Status:{" "}
                             {car.accepted ? "Job Accepted!" : "Job Rejected :("}
                           </Card.Text>
+                          {car.accepted && (
+                            <Card.Text>
+                              Job Completion Status:{" "}
+                              {car.completed
+                                ? "Job Completed and will be returned asap"
+                                : "Job currently Being Worked on"}
+                            </Card.Text>
+                          )}
+                          {!car.delivery && !this.state.sprayaway && (
+                            <div>
+                              You have requested the car to be collected
+                            </div>
+                          )}
+                          {car.delivery && !this.state.sprayaway && (
+                            <div>
+                              You have requested that you deliver the car to the
+                              unit
+                            </div>
+                          )}
                         </div>
                         {this.state.sprayaway && (
                           <div className="d-flex mt-3 mt-md-0 w-100 flex-column text-center">
@@ -398,33 +421,26 @@ class App extends Component {
                           </div>
                         )}
                       </div>
-                       <Carousel className="mt-3 carousel" variant="dark">
-                        {car.images && 
-                          car.images.map((image, carindex) => (
-                            <Carousel.Item
-                              
-                              style={{ maxWidth: 500, maxHeight: 500 }}
-                            >
-                              <Image
-                                rounded
-                                src={image}
-                                key={carindex}
-                                className="img"
-                                height="100%"
-                                width="100%"
-                              />
-                            </Carousel.Item>
-                          ))}
-                      </Carousel>
-                      {!car.delivery && !this.state.sprayaway && (
-                        <div>You have requested the car to be collected</div>
-                      )}
-                      {car.delivery && !this.state.sprayaway && (
-                        <div>
-                          You have requested that you deliver the car to the
-                          unit
-                        </div>
-                      )}
+                      <div className='d-flex justify-content-center'>
+                        <Carousel className="mt-3 d-" variant="dark">
+                          {car.images &&
+                            car.images.length !== 0 &&
+                            car.images.map((image, carindex) => (
+                              <Carousel.Item
+                                style={{ maxWidth: 500, maxHeight: 500 }}
+                              >
+                                <Image
+                                  rounded
+                                  src={image}
+                                  key={carindex}
+                                  className="img"
+                                  height="100%"
+                                  width="100%"
+                                />
+                              </Carousel.Item>
+                            ))}
+                        </Carousel>
+                      </div>
                       {this.state.sprayaway && (
                         <div className="d-flex justify-content-between m-3">
                           <Button
@@ -457,6 +473,11 @@ class App extends Component {
                           </Button>
                         </div>
                       )}
+                      {this.state.sprayaway && 
+                      <Button>
+                        Edit Job
+                      </Button>
+                      }
                       <Button
                         className="btn-danger"
                         name="accept"
